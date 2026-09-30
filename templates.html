@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3f1ea">
+  <meta name="description" content="林玄棣的個人網站五款設計提案：履歷、資料實驗室、編輯敘事、分析面板與學習路徑。">
+  <title>林玄棣｜五款個人網站提案</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="gallery.js"></script>
+</head>
+<body class="gallery-page">
+  <header class="gallery-top"><a class="gallery-brand" href="templates.html">LIN / DESIGN STUDY</a><span>五款獨立首頁 · 同一份個人資料</span></header>
+  <main class="gallery-shell">
+    <div class="gallery-intro"><div><span class="overline">PERSONAL WEBSITE / 2026</span><h1>讓經歷<br><em>有自己的樣子。</em></h1></div><p>以數學、精算與資料分析經歷為基礎，製作五種不同的個人網站。點開看完整頁面，也可以放大比較桌機與手機版。</p></div>
+    <div class="gallery-toolbar"><span>選一款作為下一版的起點</span><strong id="chosen-theme" aria-live="polite">尚未選擇</strong></div>
+    <section class="gallery-grid" aria-label="五款網站模板">
+      <article class="gallery-card"><button class="preview-open" data-preview="minimal" aria-label="放大預覽 01 清晰履歷"><span class="preview-window"><iframe title="清晰履歷縮圖" src="site.html?theme=minimal" loading="lazy" tabindex="-1"></iframe></span><span class="preview-corner">放大預覽 ↗</span></button><div class="gallery-card-info"><span>01 / PROFESSIONAL</span><h2>清晰履歷</h2><p>資訊層次清楚，先看到背景與工作經驗。適合求職與快速認識你。</p><div><a href="site.html?theme=minimal">開啟完整頁面 ↗</a><button class="choose" data-theme="minimal" aria-pressed="false">選這款</button></div></div></article>
+      <article class="gallery-card"><button class="preview-open" data-preview="lab" aria-label="放大預覽 02 資料實驗室"><span class="preview-window"><iframe title="資料實驗室縮圖" src="site.html?theme=lab" loading="lazy" tabindex="-1"></iframe></span><span class="preview-corner">放大預覽 ↗</span></button><div class="gallery-card-info"><span>02 / DATA LAB</span><h2>資料實驗室</h2><p>深色介面與研究筆記感，突出分析方法、工具與問題拆解過程。</p><div><a href="site.html?theme=lab">開啟完整頁面 ↗</a><button class="choose" data-theme="lab" aria-pressed="false">選這款</button></div></div></article>
+      <article class="gallery-card"><button class="preview-open" data-preview="editorial" aria-label="放大預覽 03 個人誌"><span class="preview-window"><iframe title="個人誌縮圖" src="site.html?theme=editorial" loading="lazy" tabindex="-1"></iframe></span><span class="preview-corner">放大預覽 ↗</span></button><div class="gallery-card-info"><span>03 / EDITORIAL</span><h2>個人誌</h2><p>以文字敘事與紙本編排呈現個性，適合自傳、學習歷程與理念。</p><div><a href="site.html?theme=editorial">開啟完整頁面 ↗</a><button class="choose" data-theme="editorial" aria-pressed="false">選這款</button></div></div></article>
+      <article class="gallery-card"><button class="preview-open" data-preview="dashboard" aria-label="放大預覽 04 分析面板"><span class="preview-window"><iframe title="分析面板縮圖" src="site.html?theme=dashboard" loading="lazy" tabindex="-1"></iframe></span><span class="preview-corner">放大預覽 ↗</span></button><div class="gallery-card-info"><span>04 / ANALYTICS</span><h2>分析面板</h2><p>像一份有設計感的工作面板，凸顯專長與實務經驗，適合分析職涯。</p><div><a href="site.html?theme=dashboard">開啟完整頁面 ↗</a><button class="choose" data-theme="dashboard" aria-pressed="false">選這款</button></div></div></article>
+      <article class="gallery-card"><button class="preview-open" data-preview="timeline" aria-label="放大預覽 05 學習路徑"><span class="preview-window"><iframe title="學習路徑縮圖" src="site.html?theme=timeline" loading="lazy" tabindex="-1"></iframe></span><span class="preview-corner">放大預覽 ↗</span></button><div class="gallery-card-info"><span>05 / JOURNEY</span><h2>學習路徑</h2><p>把數學背景、實務經歷與未來方向串成一條線，適合呈現成長軌跡。</p><div><a href="site.html?theme=timeline">開啟完整頁面 ↗</a><button class="choose" data-theme="timeline" aria-pressed="false">選這款</button></div></div></article>
+    </section>
+    <p class="gallery-footnote">所有經歷文字集中在 <code>content.js</code>，聯絡方式留空，補上後就能用於自己的網域或 GitHub Pages。</p>
+  </main>
+  <dialog id="preview-dialog" class="gallery-dialog" aria-label="模板放大預覽"><div class="dialog-controls"><strong id="dialog-title"></strong><div><button id="desktop-view" type="button" aria-pressed="true">桌機</button><button id="mobile-view" type="button" aria-pressed="false">手機</button><button id="dialog-close" type="button" aria-label="關閉預覽">關閉 ✕</button></div></div><div class="dialog-stage"><iframe id="dialog-frame" title="模板完整預覽"></iframe></div><div class="dialog-foot"><span>預覽使用相同個人內容</span><a id="dialog-full" href="site.html">在新頁面開啟 ↗</a></div></dialog>
+</body>
+</html>

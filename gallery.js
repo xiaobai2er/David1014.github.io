@@ -49,3 +49,4 @@ dialog.addEventListener('close', () => { frame.removeAttribute('src'); previousF
 dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
 try { const saved = localStorage.getItem('lin-portfolio-choice'); if (themes[saved]) selectTheme(saved); } catch {}
 syncFrames();
+

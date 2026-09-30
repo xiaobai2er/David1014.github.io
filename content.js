@@ -25,3 +25,4 @@ window.PORTFOLIO = {
   ],
   links: { email: '', linkedin: '', github: '', resume: '' }
 };
+
