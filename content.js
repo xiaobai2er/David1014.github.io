@@ -1,5 +1,7 @@
 /* 在這裡修改個人資料；五款版型會同步更新。未提供的聯絡連結會自動隱藏。 */
 window.PORTFOLIO = {
+  // 將照片放入專案後，填入 './yuki-cover.jpg'。
+  yukiCover: './yuki-cover.jpg',
   name: '林玄棣',
   initials: '玄棣',
   role: '精算與資料分析',
@@ -25,4 +27,3 @@ window.PORTFOLIO = {
   ],
   links: { email: '', linkedin: '', github: '', resume: '' }
 };
-
