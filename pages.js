@@ -1,4 +1,33 @@
 const currentFile = location.pathname.split('/').pop() || 'index.html';
+const ageLabel = document.querySelector('#yuki-age');
+if (ageLabel) {
+  const parts = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Tokyo', year: 'numeric', month: 'numeric', day: 'numeric' }).formatToParts(new Date());
+  const value = type => Number(parts.find(part => part.type === type).value);
+  const beforeBirthday = value('month') < 9 || (value('month') === 9 && value('day') < 12);
+  ageLabel.textContent = value('year') - 1997 - Number(beforeBirthday);
+}
+const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+if ('IntersectionObserver' in window && !motionPreference.matches) {
+  const items = document.querySelectorAll('[data-reveal]');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.remove('reveal-pending');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0, rootMargin: '0px 0px -24px 0px' });
+  items.forEach(item => {
+    if (item.getBoundingClientRect().top >= window.innerHeight) item.classList.add('reveal-pending');
+    observer.observe(item);
+  });
+  motionPreference.addEventListener('change', event => {
+    if (event.matches) {
+      observer.disconnect();
+      items.forEach(item => item.classList.remove('reveal-pending'));
+    }
+  });
+}
 document.querySelectorAll('nav a').forEach(link => {
   if (link.getAttribute('href') === currentFile) link.setAttribute('aria-current', 'page');
 });
