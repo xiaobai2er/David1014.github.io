@@ -5,7 +5,7 @@ const previews = {
   bands: { label: 'MUSIC / FAVORITE BANDS', title: '喜歡的樂團', description: 'Roselia & RAISE A SUILEN：收藏喜歡的音樂與樂團相關紀錄。', color: 'var(--life)' },
   ramen: { label: 'RAMEN / FOOD MAP', title: '拉麵地圖', description: '記錄吃過的拉麵、食記與口袋名單，尋找下一碗喜歡的味道。', color: 'var(--ramen)' }
 };
-const routeKeys = { 'voice.html': 'yuki', 'career.html': 'career', 'voice.html#bands': 'bands', 'ramen.html': 'ramen' };
+const routeKeys = { 'voice.html': 'yuki', 'career.html': 'career', 'bands.html': 'bands', 'voice.html#bands': 'bands', 'ramen.html': 'ramen' };
 const previewLinks = document.querySelectorAll('#map a');
 let activePreview;
 function showPreview(key) {
