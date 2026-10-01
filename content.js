@@ -25,5 +25,5 @@ window.PORTFOLIO = {
     { year: '現在', title: '精算實務', text: '從商品數據與業務情境出發，累積資料分析和跨部門合作經驗。' },
     { year: '下一步', title: '深化統計與分析能力', text: '持續探索更完整的方法，讓分析能回應真實決策問題。' }
   ],
-  links: { email: '', linkedin: '', github: '', resume: '' }
+  links: { email: 'sdangle1014@gmail.com', linkedin: '', github: '', resume: '' }
 };
