@@ -6,17 +6,17 @@
   if (!map || !tilesLayer || !markerLayer || !status) return;
 
   const locations = [
-    { id: 'noodlesoul', name: '羅東麵魂家', lat: 24.672, lon: 121.765 },
-    { id: 'birdman', name: '台北鳥人拉麵（中山店）', lat: 25.0509, lon: 121.524 },
-    { id: 'chikumo', name: '台北麵屋千雲', lat: 25.0514, lon: 121.525 },
-    { id: 'duck', name: '柑橘鴨蔥六張犁', lat: 25.02307, lon: 121.55453 },
-    { id: 'issyoke', name: '板橋一生懸麵', lat: 25.02361, lon: 121.46874 },
-    { id: 'mutsuki', name: '台北睦月拉麵', lat: 25.041, lon: 121.552 },
-    { id: 'hasumentei', name: '荷麵亭士林', lat: 25.0931168, lon: 121.5266429 },
-    { id: 'guanghua', name: '丸舢拉麵光華店', lat: 25.044, lon: 121.531 },
-    { id: 'cityhall', name: '丸舢拉麵市府店', lat: 25.041, lon: 121.568 },
-    { id: 'shinn', name: '柑橘SHINN台北仁愛路', lat: 25.037, lon: 121.551 },
-    { id: 'ryunokokyu', name: '龍鱗拉麵士林店', lat: 25.088, lon: 121.526 },
+    { id: 'noodlesoul', name: '麵魂家-真。濃厚豚骨拉麵', lat: 24.672, lon: 121.765 },
+    { id: 'birdman', name: '鳥人拉麵 中山店', lat: 25.0509, lon: 121.524 },
+    { id: 'chikumo', name: '麵屋 千雲 林森店', lat: 25.0514, lon: 121.525 },
+    { id: 'duck', name: '柑橘Shinn 鴨蔥', lat: 25.02307, lon: 121.55453 },
+    { id: 'issyoke', name: '一生懸麵 新埔三猿店', lat: 25.02361, lon: 121.46874 },
+    { id: 'mutsuki', name: '睦月拉麵', lat: 25.041, lon: 121.552 },
+    { id: 'hasumentei', name: '荷麵亭 HASUMENTEI 士林店', lat: 25.0931168, lon: 121.5266429 },
+    { id: 'guanghua', name: '丸舢拉麵 光華店', lat: 25.044, lon: 121.531 },
+    { id: 'cityhall', name: '丸舢拉麵 市府店', lat: 25.041, lon: 121.568 },
+    { id: 'shinn', name: '柑橘Shinn', lat: 25.037, lon: 121.551 },
+    { id: 'ryunokokyu', name: '龍鱗拉麵 士林店', lat: 25.088, lon: 121.526 },
   ];
   const size = 256;
   const state = { lat: 24.89, lon: 121.53, zoom: 8, selected: null, drag: null, tileError: false };
@@ -95,6 +95,7 @@
       hit.setAttribute('r', '18');
       hit.setAttribute('class', 'ramen-map__hit');
       marker.append(hit, circle, number);
+      marker.dataset.placeId = location.id;
       marker.setAttribute('role', 'button');
       marker.setAttribute('tabindex', '0');
       marker.setAttribute('aria-label', `${locations.indexOf(location) + 1}. ${location.name}`);
@@ -130,19 +131,41 @@
   document.querySelectorAll('[data-select-place]').forEach(button => button.addEventListener('click', () => selectLocation(button.dataset.selectPlace)));
 
   map.addEventListener('pointerdown', event => {
-    if (event.target.closest('button, a, .ramen-map__marker')) return;
-    state.drag = { x: event.clientX, y: event.clientY, center: centerPixel() };
-    map.setPointerCapture(event.pointerId);
+    if (event.button !== 0 && event.pointerType === 'mouse') return;
+    if (event.target.closest('button, a')) return;
+    const marker = event.target.closest('.ramen-map__marker');
+    state.drag = {
+      pointerId: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      center: centerPixel(),
+      markerId: marker?.dataset.placeId || null,
+      moved: false,
+    };
+    try { map.setPointerCapture(event.pointerId); } catch (_) { /* Pointer may already have been cancelled. */ }
     map.classList.add('is-dragging');
+    event.preventDefault();
   });
   map.addEventListener('pointermove', event => {
-    if (!state.drag) return;
-    const next = unproject(state.drag.center.x - (event.clientX - state.drag.x), state.drag.center.y - (event.clientY - state.drag.y), state.zoom);
+    if (!state.drag || state.drag.pointerId !== event.pointerId) return;
+    const dx = event.clientX - state.drag.x;
+    const dy = event.clientY - state.drag.y;
+    if (!state.drag.moved && Math.hypot(dx, dy) < 5) return;
+    state.drag.moved = true;
+    const next = unproject(state.drag.center.x - dx, state.drag.center.y - dy, state.zoom);
     state.lat = next.lat; state.lon = next.lon; queueRender();
   });
-  const endDrag = () => { state.drag = null; map.classList.remove('is-dragging'); };
-  map.addEventListener('pointerup', endDrag);
-  map.addEventListener('pointercancel', endDrag);
+  const endDrag = (event, cancelled = false) => {
+    if (!state.drag || state.drag.pointerId !== event.pointerId) return;
+    const drag = state.drag;
+    state.drag = null;
+    map.classList.remove('is-dragging');
+    if (!cancelled && !drag.moved && drag.markerId) selectLocation(drag.markerId);
+    try { if (map.hasPointerCapture(event.pointerId)) map.releasePointerCapture(event.pointerId); } catch (_) { /* Capture can be lost before pointerup. */ }
+  };
+  map.addEventListener('pointerup', event => endDrag(event));
+  map.addEventListener('pointercancel', event => endDrag(event, true));
+  map.addEventListener('lostpointercapture', event => endDrag(event, true));
   map.addEventListener('keydown', event => {
     if (event.key === '+' || event.key === '=') { state.zoom = Math.min(18, state.zoom + 1); queueRender(); }
     if (event.key === '-') { state.zoom = Math.max(7, state.zoom - 1); queueRender(); }
