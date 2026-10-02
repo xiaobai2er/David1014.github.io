@@ -86,7 +86,8 @@
       playerVars: { playsinline: 1 },
       events: {
         onReady: () => {
-          if (player.getVolume) updateVolume(player.getVolume());
+          player.setVolume(25);
+          updateVolume(25);
           loadQueue();
           updateTitle();
         },
