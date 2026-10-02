@@ -2,6 +2,7 @@
   const frame = document.getElementById('bands-player-frame');
   const title = document.getElementById('bands-player-title');
   const toggle = document.getElementById('bands-player-toggle');
+  const timeReadout = document.getElementById('bands-player-time');
   const source = document.getElementById('bands-player-source');
   const volume = document.getElementById('bands-player-volume');
   const volumeValue = document.getElementById('bands-player-volume-value');
@@ -24,6 +25,16 @@
   let player = null;
   let playing = false;
   let activeSource = source.value;
+  const formatTime = seconds => {
+    const total = Math.max(0, Math.floor(Number(seconds) || 0));
+    return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
+  };
+  const updateTime = reset => {
+    if (!timeReadout) return;
+    const current = reset || !player?.getCurrentTime ? 0 : player.getCurrentTime();
+    const duration = player?.getDuration ? player.getDuration() : 0;
+    timeReadout.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
+  };
   const updateVolume = value => {
     const percent = Math.max(0, Math.min(100, Math.round(Number(value))));
     if (volume) { volume.value = String(percent); volume.setAttribute('aria-valuetext', `${percent}%`); }
@@ -60,6 +71,7 @@
     activeSource = selectedSource;
     title.textContent = `${queue.label} queue`;
     title.href = queue.url;
+    updateTime(true);
     if (player) {
       if (preservePlayback) {
         player.loadPlaylist({ list: queue.playlist, listType: 'playlist', index: 0 });
@@ -72,11 +84,11 @@
   };
 
   source.addEventListener('change', () => loadQueue(playing));
-  document.getElementById('bands-player-previous')?.addEventListener('click', () => player?.previousVideo());
-  document.getElementById('bands-player-next')?.addEventListener('click', () => player?.nextVideo());
+  document.getElementById('bands-player-previous')?.addEventListener('click', () => { updateTime(true); player?.previousVideo(); });
+  document.getElementById('bands-player-next')?.addEventListener('click', () => { updateTime(true); player?.nextVideo(); });
   toggle.addEventListener('click', () => {
     if (!player) return;
-    if (playing) player.pauseVideo();
+    if (playing) { player.pauseVideo(); updateTime(false); }
     else player.playVideo();
   });
 
@@ -90,10 +102,16 @@
           updateVolume(25);
           loadQueue();
           updateTitle();
+          updateTime(true);
+          window.setInterval(() => updateTime(false), 500);
         },
         onStateChange: event => {
-          if (event.data === YT.PlayerState.PLAYING) setPlaying(true);
-          if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) setPlaying(false);
+          if (event.data === YT.PlayerState.PLAYING) { setPlaying(true); updateTime(false); }
+          if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
+            setPlaying(false);
+            updateTime(event.data === YT.PlayerState.ENDED);
+          }
+          if (event.data === YT.PlayerState.CUED) updateTime(true);
           if (event.data === YT.PlayerState.CUED || event.data === YT.PlayerState.PLAYING) updateTitle();
         },
       },
