@@ -1,4 +1,5 @@
 (() => {
+  if (window.bandPlayer) return;
   const queues = {
     roselia: { label: 'Roselia', playlist: 'PLLatW7JFqfww' },
     ras: { label: 'RAISE A SUILEN', playlist: 'PLUNBkD51DRF0' },
@@ -6,7 +7,8 @@
   const storage = { queue: 'bandPlayerQueue', volume: 'bandPlayerVolume' };
   const safeGet = key => { try { return localStorage.getItem(key); } catch (_) { return null; } };
   const safeSet = (key, value) => { try { localStorage.setItem(key, value); } catch (_) {} };
-  const initialQueue = Object.hasOwn(queues, safeGet(storage.queue)) ? safeGet(storage.queue) : 'roselia';
+  const savedQueue = safeGet(storage.queue);
+  const initialQueue = Object.hasOwn(queues, savedQueue) ? savedQueue : 'roselia';
   const savedVolumeValue = safeGet(storage.volume);
   const savedVolume = savedVolumeValue === null ? NaN : Number(savedVolumeValue);
   const initialVolume = Number.isFinite(savedVolume) && savedVolume >= 0 && savedVolume <= 100 ? savedVolume : 25;
@@ -15,8 +17,8 @@
   root.setAttribute('role', 'region');
   root.setAttribute('aria-label', 'Roselia and RAISE A SUILEN music player');
   root.innerHTML = `<div class="music-dock__yt" aria-hidden="true"><div id="bands-player-frame"></div></div>
-    <div class="music-dock__volume"><button type="button" id="music-mute" aria-label="Mute" title="Mute">◖))</button><input id="music-volume" type="range" min="0" max="100" value="${initialVolume}" aria-label="Volume" aria-valuetext="${initialVolume}%"></div>
     <div class="music-dock__record" aria-hidden="true"><span></span></div>
+    <div class="music-dock__volume"><button type="button" id="music-mute" aria-label="Mute" title="Mute">◖)</button><input id="music-volume" type="range" min="0" max="100" value="${initialVolume}" aria-label="Volume" aria-valuetext="${initialVolume}%"></div>
     <div class="music-dock__main"><label class="music-dock__queue-label" for="music-queue">Queue</label><select id="music-queue" aria-label="Select music queue"><option value="roselia"${initialQueue === 'roselia' ? ' selected' : ''}>Roselia</option><option value="ras"${initialQueue === 'ras' ? ' selected' : ''}>RAISE A SUILEN</option></select>
       <div class="music-dock__title" id="music-title">${queues[initialQueue].label}</div><div class="music-dock__timeline"><span id="music-time">00:00 / 00:00</span><input id="music-seek" type="range" min="0" max="1000" value="0" aria-label="Seek" aria-valuetext="00:00"></div>
       <div class="music-dock__controls"><button type="button" id="music-prev" aria-label="Previous track" title="Previous track">|◀</button><button type="button" id="music-toggle" aria-label="Play" aria-pressed="false" title="Play">▶</button><button type="button" id="music-next" aria-label="Next track" title="Next track">▶|</button></div><p class="music-dock__status" id="music-status" role="status" aria-live="polite"></p></div>`;
@@ -39,6 +41,22 @@
   seek.addEventListener('input', () => { const duration = player?.getDuration?.() || 0, seconds = duration * Number(seek.value) / 1000; seek.setAttribute('aria-valuetext', fmt(seconds)); time.textContent = `${fmt(seconds)} / ${fmt(duration)}`; });
   const commitSeek = () => { if (draggingSeek && player?.seekTo) player.seekTo((player.getDuration?.() || 0) * Number(seek.value) / 1000, true); draggingSeek = false; };
   seek.addEventListener('change', commitSeek); seek.addEventListener('pointerup', commitSeek); seek.addEventListener('keyup', event => { if (['ArrowLeft', 'ArrowRight', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key) && player?.seekTo) player.seekTo((player.getDuration?.() || 0) * Number(seek.value) / 1000, true); });
-  window.onYouTubeIframeAPIReady = () => { player = new YT.Player('bands-player-frame', { playerVars: { autoplay: 0, playsinline: 1, controls: 0 }, events: { onReady: () => { player.setVolume(initialVolume); cueSelected(); window.setInterval(refresh, 500); }, onStateChange: event => { setPlaying(event.data === YT.PlayerState.PLAYING || event.data === YT.PlayerState.BUFFERING); if (event.data === YT.PlayerState.CUED) { status.textContent = ''; refresh(); } if (event.data === YT.PlayerState.PLAYING) { status.textContent = ''; refresh(); } }, onError: () => { status.textContent = 'The YouTube playlist could not be loaded. Open a music video on YouTube instead.'; } } }); };
-  const api = document.createElement('script'); api.src = 'https://www.youtube.com/iframe_api'; api.onerror = () => { status.textContent = 'YouTube player could not load. Check your connection or open a music video on YouTube.'; }; document.head.append(api);
+  let refreshTimer;
+  const startPlayer = () => {
+    if (!window.YT?.Player || player) return;
+    player = new YT.Player('bands-player-frame', { playerVars: { autoplay: 0, playsinline: 1, controls: 0 }, events: {
+      onReady: () => { player.setVolume(Number(volume.value)); cueSelected(); refreshTimer = window.setInterval(refresh, 500); },
+      onStateChange: event => { setPlaying(event.data === YT.PlayerState.PLAYING || event.data === YT.PlayerState.BUFFERING); if (event.data === YT.PlayerState.CUED || event.data === YT.PlayerState.PLAYING) { status.textContent = ''; refresh(); } },
+      onError: () => { status.textContent = 'The YouTube playlist could not be loaded. Open a music video on YouTube instead.'; },
+    } });
+  };
+  window.bandPlayer = { get player() { return player; }, get element() { return root; } };
+  if (window.YT?.Player) startPlayer();
+  else {
+    const oldReady = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => { if (typeof oldReady === 'function') oldReady(); startPlayer(); };
+    if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
+      const api = document.createElement('script'); api.src = 'https://www.youtube.com/iframe_api'; api.onerror = () => { status.textContent = 'YouTube player could not load. Check your connection or open a music video on YouTube.'; }; document.head.append(api);
+    }
+  }
 })();
