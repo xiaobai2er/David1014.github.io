@@ -101,9 +101,11 @@
 
   document.addEventListener('click', event => {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    const link = event.target.closest('a[href]');
-    if (!link || link.target || link.hasAttribute('download')) return;
-    const url = new URL(link.href, location.href);
+    // SVG link targets can be SVGTextElement/SVGCircleElement instances; use the
+    // composed path so branch clicks resolve to their enclosing anchor reliably.
+    const link = event.composedPath().find(node => node instanceof Element && node.matches('a[href]'));
+    if (!link || link.getAttribute('target') || link.hasAttribute('download')) return;
+    const url = new URL(link.getAttribute('href'), location.href);
     if (!canNavigate(url)) return;
     if (url.pathname === location.pathname && url.search === location.search && url.hash) {
       event.preventDefault();
@@ -112,10 +114,14 @@
       return;
     }
     event.preventDefault();
-    loadRoute(url).catch(() => { location.href = url.href; });
-  });
+    loadRoute(url).catch(error => {
+      window.dispatchEvent(new CustomEvent('sitenavigationerror', { detail: error }));
+    });
+  }, true);
   window.addEventListener('popstate', () => {
-    loadRoute(new URL(location.href), { historyMode: 'none' }).catch(() => { location.reload(); });
+    loadRoute(new URL(location.href), { historyMode: 'none' }).catch(error => {
+      window.dispatchEvent(new CustomEvent('sitenavigationerror', { detail: error }));
+    });
   });
   window.siteNavigation = { load: href => loadRoute(new URL(href, location.href)), get busy() { return navigationBusy; } };
 })();
