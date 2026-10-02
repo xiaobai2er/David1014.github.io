@@ -3,6 +3,8 @@
   const title = document.getElementById('bands-player-title');
   const toggle = document.getElementById('bands-player-toggle');
   const source = document.getElementById('bands-player-source');
+  const volume = document.getElementById('bands-player-volume');
+  const volumeValue = document.getElementById('bands-player-volume-value');
   if (!frame || !title || !toggle || !source) return;
 
   const queues = {
@@ -22,6 +24,15 @@
   let player = null;
   let playing = false;
   let activeSource = source.value;
+  const updateVolume = value => {
+    const percent = Math.max(0, Math.min(100, Math.round(Number(value))));
+    if (volume) { volume.value = String(percent); volume.setAttribute('aria-valuetext', `${percent}%`); }
+    if (volumeValue) volumeValue.textContent = `${percent}%`;
+  };
+  volume?.addEventListener('input', () => {
+    updateVolume(volume.value);
+    if (player?.setVolume) player.setVolume(Number(volume.value));
+  });
 
   const setPlaying = value => {
     playing = value;
@@ -75,6 +86,7 @@
       playerVars: { playsinline: 1 },
       events: {
         onReady: () => {
+          if (player.getVolume) updateVolume(player.getVolume());
           loadQueue();
           updateTitle();
         },
