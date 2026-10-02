@@ -17,9 +17,11 @@
     { id: 'cityhall', name: '丸舢拉麵 市府店', lat: 25.041, lon: 121.568 },
     { id: 'shinn', name: '柑橘Shinn', lat: 25.037, lon: 121.551 },
     { id: 'ryunokokyu', name: '龍鱗拉麵 士林店', lat: 25.088, lon: 121.526 },
+    { id: 'kikanbo-nakayamaten', name: '辣麻味噌沾麵 鬼金棒 中山店', lat: 25.0491265, lon: 121.5209994 },
+    { id: 'orenobuta', name: '俺の豚', lat: 23.0192496, lon: 120.2334388 },
   ];
   const size = 256;
-  const state = { lat: 24.89, lon: 121.53, zoom: 8, selected: null, drag: null, tileError: false };
+  const state = { lat: 24.05, lon: 121.10, zoom: 7, selected: null, drag: null, tileError: false };
   let renderQueued = false;
 
   const project = (lat, lon, zoom) => {
@@ -105,7 +107,7 @@
       });
       markerLayer.append(marker);
     }
-    if (!state.tileError) status.textContent = `${locations.length} 個位置；點選標記或清單店名查看位置。`;
+    if (!state.tileError) status.textContent = '點選標記查看店家資訊，拖曳地圖可移動。';
   };
 
   const selectLocation = id => {
@@ -123,9 +125,9 @@
   document.getElementById('ramen-zoom-in')?.addEventListener('click', () => { state.zoom = Math.min(18, state.zoom + 1); queueRender(); });
   document.getElementById('ramen-zoom-out')?.addEventListener('click', () => { state.zoom = Math.max(7, state.zoom - 1); queueRender(); });
   document.getElementById('ramen-reset')?.addEventListener('click', () => {
-    state.lat = 24.89; state.lon = 121.53; state.zoom = 8; state.selected = null;
+    state.lat = 24.05; state.lon = 121.10; state.zoom = 7; state.selected = null;
     document.querySelectorAll('.ramen-location').forEach(item => item.classList.remove('is-selected'));
-    status.textContent = `${locations.length} 個位置；點選標記或清單店名查看位置。`;
+    status.textContent = '點選標記查看店家資訊，拖曳地圖可移動。';
     queueRender();
   });
   document.querySelectorAll('[data-select-place]').forEach(button => button.addEventListener('click', () => selectLocation(button.dataset.selectPlace)));
