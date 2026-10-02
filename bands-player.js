@@ -1,16 +1,28 @@
 (() => {
-  const tracks = [
-    { id: 'p6XVF7fkoGM', title: 'Roselia - BLACK SHOUT (LIVE Vier)' },
-    { id: 'gGUPMlP8TnI', title: 'RAISE A SUILEN - A DECLARATION OF \u00d7\u00d7\u00d7' },
-  ];
   const frame = document.getElementById('bands-player-frame');
   const title = document.getElementById('bands-player-title');
   const toggle = document.getElementById('bands-player-toggle');
-  if (!frame || !title || !toggle) return;
+  const source = document.getElementById('bands-player-source');
+  if (!frame || !title || !toggle || !source) return;
 
-  let activeTrack = 0;
+  const queues = {
+    roselia: {
+      label: 'Roselia',
+      playlist: 'PLLatW7JFqfww',
+      url: 'https://music.youtube.com/playlist?list=PLLatW7JFqfww',
+    },
+    ras: {
+      label: 'RAISE A SUILEN',
+      // YouTube's uploads playlist ID uses UU plus the channel ID suffix.
+      playlist: 'UUI7AJVp2JFWDWBAm2MOCfUw',
+      url: 'https://music.youtube.com/@raiseasuilen_oac',
+    },
+  };
+  const queueIdPattern = /^[A-Za-z0-9_-]{10,64}$/;
+  const validQueue = queue => queue && queueIdPattern.test(queue.playlist);
   let player = null;
   let playing = false;
+  let activeSource = source.value;
 
   const setPlaying = value => {
     playing = value;
@@ -21,42 +33,56 @@
     toggle.textContent = value ? '\u275a\u275a' : '\u25b6';
   };
 
-  const updateTrack = index => {
-    activeTrack = (index + tracks.length) % tracks.length;
-    const track = tracks[activeTrack];
-    title.textContent = track.title;
-    title.href = `https://www.youtube.com/watch?v=${track.id}`;
+  const updateTitle = () => {
+    if (!player || !player.getVideoData) return;
+    const video = player.getVideoData();
+    const queue = queues[activeSource];
+    title.textContent = video && video.title ? video.title : `${queue.label} queue`;
+    title.href = video && video.video_id
+      ? `https://www.youtube.com/watch?v=${encodeURIComponent(video.video_id)}`
+      : queue.url;
+  };
+
+  const loadQueue = (preservePlayback = false) => {
+    const selectedSource = source.value;
+    const queue = queues[selectedSource];
+    if (!validQueue(queue)) return;
+    activeSource = selectedSource;
+    title.textContent = `${queue.label} queue`;
+    title.href = queue.url;
     if (player) {
-      player.loadVideoById(track.id);
-      setPlaying(true);
-    } else {
-      // Keep pre-API selection paused; play intent is applied once the API is ready.
-      frame.src = `https://www.youtube-nocookie.com/embed/${track.id}?enablejsapi=1&playsinline=1`;
-      setPlaying(false);
+      if (preservePlayback) {
+        player.loadPlaylist({ list: queue.playlist, listType: 'playlist', index: 0 });
+        setPlaying(true);
+      } else {
+        player.cuePlaylist({ list: queue.playlist, listType: 'playlist', index: 0 });
+        setPlaying(false);
+      }
     }
   };
 
-  document.getElementById('bands-player-previous')?.addEventListener('click', () => updateTrack(activeTrack - 1));
-  document.getElementById('bands-player-next')?.addEventListener('click', () => updateTrack(activeTrack + 1));
+  source.addEventListener('change', () => loadQueue(playing));
+  document.getElementById('bands-player-previous')?.addEventListener('click', () => player?.previousVideo());
+  document.getElementById('bands-player-next')?.addEventListener('click', () => player?.nextVideo());
   toggle.addEventListener('click', () => {
-    if (player) {
-      if (playing) player.pauseVideo();
-      else player.playVideo();
-    } else {
-      setPlaying(!playing);
-    }
+    if (!player) return;
+    if (playing) player.pauseVideo();
+    else player.playVideo();
   });
 
   window.onYouTubeIframeAPIReady = () => {
+    if (!validQueue(queues[activeSource])) return;
     player = new YT.Player(frame, {
+      playerVars: { playsinline: 1 },
       events: {
         onReady: () => {
-          if (playing) player.playVideo();
-          else player.pauseVideo();
+          loadQueue();
+          updateTitle();
         },
         onStateChange: event => {
           if (event.data === YT.PlayerState.PLAYING) setPlaying(true);
           if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) setPlaying(false);
+          if (event.data === YT.PlayerState.CUED || event.data === YT.PlayerState.PLAYING) updateTitle();
         },
       },
     });

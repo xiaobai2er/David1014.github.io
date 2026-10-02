@@ -2,18 +2,23 @@
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>林玄棣｜樂團</title><link rel="stylesheet" href="style.css?v=bands-2"></head>
 <body data-page="bands">
 <aside class="bands-player" aria-label="YouTube music player">
-  <div class="bands-player__screen"><iframe id="bands-player-frame" title="YouTube music player" src="https://www.youtube-nocookie.com/embed/p6XVF7fkoGM?enablejsapi=1&playsinline=1" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" loading="lazy"></iframe></div>
+  <div class="bands-player__screen"><div id="bands-player-frame" title="YouTube music player"></div></div>
   <div class="bands-player__content">
     <p class="bands-player__eyebrow">NOW PLAYING</p>
-    <a class="bands-player__title" id="bands-player-title" href="https://www.youtube.com/watch?v=p6XVF7fkoGM" target="_blank" rel="noopener">Roselia - BLACK SHOUT (LIVE Vier)</a>
+    <label class="bands-player__source-label" for="bands-player-source">Queue</label>
+    <select id="bands-player-source" class="bands-player__source" aria-label="Select band music queue">
+      <option value="roselia">Roselia</option>
+      <option value="ras">RAISE A SUILEN</option>
+    </select>
+    <a class="bands-player__title" id="bands-player-title" href="https://music.youtube.com/playlist?list=PLLatW7JFqfww" target="_blank" rel="noopener">Roselia playlist</a>
     <div class="bands-player__controls" aria-label="Playback controls">
       <button type="button" id="bands-player-previous" aria-label="Previous track" title="Previous track">|&lt;</button>
       <button type="button" id="bands-player-toggle" aria-label="Play" title="Play" aria-pressed="false">&#9654;</button>
       <button type="button" id="bands-player-next" aria-label="Next track" title="Next track">&gt;|</button>
     </div>
-    <div class="bands-player__fallbacks" aria-label="YouTube track links">
-      <a class="bands-player__fallback" href="https://www.youtube.com/watch?v=p6XVF7fkoGM" target="_blank" rel="noopener">Watch Roselia BLACK SHOUT on YouTube</a>
-      <a class="bands-player__fallback" href="https://www.youtube.com/watch?v=gGUPMlP8TnI" target="_blank" rel="noopener">Watch RAISE A SUILEN A DECLARATION OF ××× on YouTube</a>
+    <div class="bands-player__fallbacks" aria-label="Music queue links">
+      <a class="bands-player__fallback" href="https://music.youtube.com/playlist?list=PLLatW7JFqfww" target="_blank" rel="noopener">Open Roselia playlist</a>
+      <a class="bands-player__fallback" href="https://music.youtube.com/@raiseasuilen_oac" target="_blank" rel="noopener">Open RAS Music channel</a>
     </div>
   </div>
 </aside>
