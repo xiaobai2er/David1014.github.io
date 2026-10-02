@@ -21,7 +21,7 @@
     { id: 'orenobuta', name: '俺の豚', lat: 23.0192496, lon: 120.2334388 },
   ];
   const size = 256;
-  const state = { lat: 24.05, lon: 121.10, zoom: 7, selected: null, drag: null, tileError: false };
+  const state = { lat: 24.05, lon: 121.10, zoom: 7, selected: null, drag: null };
   let renderQueued = false;
 
   const project = (lat, lon, zoom) => {
@@ -69,10 +69,6 @@
         tile.src = `https://tile.openstreetmap.org/${state.zoom}/${wrappedX}/${y}.png`;
         tile.style.left = `${Math.round(x * size - left)}px`;
         tile.style.top = `${Math.round(y * size - top)}px`;
-        tile.addEventListener('error', () => {
-          state.tileError = true;
-          status.textContent = '地圖圖磚暫時無法載入；請使用下方地址與導航清單。';
-        }, { once: true });
         tileNodes.push(tile);
       }
     }
@@ -107,7 +103,6 @@
       });
       markerLayer.append(marker);
     }
-    if (!state.tileError) status.textContent = '點選標記查看店家資訊，拖曳地圖可移動。';
   };
 
   const selectLocation = id => {
@@ -118,7 +113,7 @@
     state.lon = location.lon;
     state.zoom = Math.max(state.zoom, 14);
     document.querySelectorAll('.ramen-location').forEach(item => item.classList.toggle('is-selected', item.dataset.place === id));
-    status.textContent = `已選取：${location.name}；可使用地址旁的地圖導航。`;
+    status.textContent = location.name;
     queueRender();
   };
   // Buttons and list controls work without any map tile service.
@@ -127,7 +122,7 @@
   document.getElementById('ramen-reset')?.addEventListener('click', () => {
     state.lat = 24.05; state.lon = 121.10; state.zoom = 7; state.selected = null;
     document.querySelectorAll('.ramen-location').forEach(item => item.classList.remove('is-selected'));
-    status.textContent = '點選標記查看店家資訊，拖曳地圖可移動。';
+    status.textContent = '';
     queueRender();
   });
   document.querySelectorAll('[data-select-place]').forEach(button => button.addEventListener('click', () => selectLocation(button.dataset.selectPlace)));
