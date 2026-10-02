@@ -13,9 +13,8 @@
     },
     ras: {
       label: 'RAISE A SUILEN',
-      // YouTube's uploads playlist ID uses UU plus the channel ID suffix.
-      playlist: 'UUI7AJVp2JFWDWBAm2MOCfUw',
-      url: 'https://music.youtube.com/@raiseasuilen_oac',
+      playlist: 'PLUNBkD51DRF0',
+      url: 'https://music.youtube.com/playlist?list=PLUNBkD51DRF0',
     },
   };
   const queueIdPattern = /^[A-Za-z0-9_-]{10,64}$/;
