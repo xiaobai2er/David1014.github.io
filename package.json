@@ -1,0 +1,13 @@
+{
+  "name": "xiaobai2er.github.io",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiaobai2er/xiaobai2er.github.io.git"
+  },
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.63.0"
+  },
+  "private": true
+}
