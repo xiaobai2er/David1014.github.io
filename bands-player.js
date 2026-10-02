@@ -1,124 +1,44 @@
 (() => {
-  const frame = document.getElementById('bands-player-frame');
-  const title = document.getElementById('bands-player-title');
-  const toggle = document.getElementById('bands-player-toggle');
-  const timeReadout = document.getElementById('bands-player-time');
-  const source = document.getElementById('bands-player-source');
-  const volume = document.getElementById('bands-player-volume');
-  const volumeValue = document.getElementById('bands-player-volume-value');
-  if (!frame || !title || !toggle || !source) return;
-
   const queues = {
-    roselia: {
-      label: 'Roselia',
-      playlist: 'PLLatW7JFqfww',
-      url: 'https://music.youtube.com/playlist?list=PLLatW7JFqfww',
-    },
-    ras: {
-      label: 'RAISE A SUILEN',
-      playlist: 'PLUNBkD51DRF0',
-      url: 'https://music.youtube.com/playlist?list=PLUNBkD51DRF0',
-    },
+    roselia: { label: 'Roselia', playlist: 'PLLatW7JFqfww' },
+    ras: { label: 'RAISE A SUILEN', playlist: 'PLUNBkD51DRF0' },
   };
-  const queueIdPattern = /^[A-Za-z0-9_-]{10,64}$/;
-  const validQueue = queue => queue && queueIdPattern.test(queue.playlist);
-  let player = null;
-  let playing = false;
-  let activeSource = source.value;
-  const formatTime = seconds => {
-    const total = Math.max(0, Math.floor(Number(seconds) || 0));
-    return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
-  };
-  const updateTime = reset => {
-    if (!timeReadout) return;
-    const current = reset || !player?.getCurrentTime ? 0 : player.getCurrentTime();
-    const duration = player?.getDuration ? player.getDuration() : 0;
-    timeReadout.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
-  };
-  const updateVolume = value => {
-    const percent = Math.max(0, Math.min(100, Math.round(Number(value))));
-    if (volume) { volume.value = String(percent); volume.setAttribute('aria-valuetext', `${percent}%`); }
-    if (volumeValue) volumeValue.textContent = `${percent}%`;
-  };
-  volume?.addEventListener('input', () => {
-    updateVolume(volume.value);
-    if (player?.setVolume) player.setVolume(Number(volume.value));
-  });
-
-  const setPlaying = value => {
-    playing = value;
-    const label = value ? 'Pause' : 'Play';
-    toggle.setAttribute('aria-label', label);
-    toggle.setAttribute('title', label);
-    toggle.setAttribute('aria-pressed', String(value));
-    toggle.textContent = value ? '\u275a\u275a' : '\u25b6';
-  };
-
-  const updateTitle = () => {
-    if (!player || !player.getVideoData) return;
-    const video = player.getVideoData();
-    const queue = queues[activeSource];
-    title.textContent = video && video.title ? video.title : `${queue.label} queue`;
-    title.href = video && video.video_id
-      ? `https://www.youtube.com/watch?v=${encodeURIComponent(video.video_id)}`
-      : queue.url;
-  };
-
-  const loadQueue = (preservePlayback = false) => {
-    const selectedSource = source.value;
-    const queue = queues[selectedSource];
-    if (!validQueue(queue)) return;
-    activeSource = selectedSource;
-    title.textContent = `${queue.label} queue`;
-    title.href = queue.url;
-    updateTime(true);
-    if (player) {
-      if (preservePlayback) {
-        player.loadPlaylist({ list: queue.playlist, listType: 'playlist', index: 0 });
-        setPlaying(true);
-      } else {
-        player.cuePlaylist({ list: queue.playlist, listType: 'playlist', index: 0 });
-        setPlaying(false);
-      }
-    }
-  };
-
-  source.addEventListener('change', () => loadQueue(playing));
-  document.getElementById('bands-player-previous')?.addEventListener('click', () => { updateTime(true); player?.previousVideo(); });
-  document.getElementById('bands-player-next')?.addEventListener('click', () => { updateTime(true); player?.nextVideo(); });
-  toggle.addEventListener('click', () => {
-    if (!player) return;
-    if (playing) { player.pauseVideo(); updateTime(false); }
-    else player.playVideo();
-  });
-
-  window.onYouTubeIframeAPIReady = () => {
-    if (!validQueue(queues[activeSource])) return;
-    player = new YT.Player(frame, {
-      playerVars: { playsinline: 1 },
-      events: {
-        onReady: () => {
-          player.setVolume(25);
-          updateVolume(25);
-          loadQueue();
-          updateTitle();
-          updateTime(true);
-          window.setInterval(() => updateTime(false), 500);
-        },
-        onStateChange: event => {
-          if (event.data === YT.PlayerState.PLAYING) { setPlaying(true); updateTime(false); }
-          if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
-            setPlaying(false);
-            updateTime(event.data === YT.PlayerState.ENDED);
-          }
-          if (event.data === YT.PlayerState.CUED) updateTime(true);
-          if (event.data === YT.PlayerState.CUED || event.data === YT.PlayerState.PLAYING) updateTitle();
-        },
-      },
-    });
-  };
-
-  const api = document.createElement('script');
-  api.src = 'https://www.youtube.com/iframe_api';
-  document.head.append(api);
+  const storage = { queue: 'bandPlayerQueue', volume: 'bandPlayerVolume' };
+  const safeGet = key => { try { return localStorage.getItem(key); } catch (_) { return null; } };
+  const safeSet = (key, value) => { try { localStorage.setItem(key, value); } catch (_) {} };
+  const initialQueue = Object.hasOwn(queues, safeGet(storage.queue)) ? safeGet(storage.queue) : 'roselia';
+  const savedVolumeValue = safeGet(storage.volume);
+  const savedVolume = savedVolumeValue === null ? NaN : Number(savedVolumeValue);
+  const initialVolume = Number.isFinite(savedVolume) && savedVolume >= 0 && savedVolume <= 100 ? savedVolume : 25;
+  const root = document.createElement('aside');
+  root.className = 'music-dock';
+  root.setAttribute('role', 'region');
+  root.setAttribute('aria-label', 'Roselia and RAISE A SUILEN music player');
+  root.innerHTML = `<div class="music-dock__yt" aria-hidden="true"><div id="bands-player-frame"></div></div>
+    <div class="music-dock__volume"><button type="button" id="music-mute" aria-label="Mute" title="Mute">◖))</button><input id="music-volume" type="range" min="0" max="100" value="${initialVolume}" aria-label="Volume" aria-valuetext="${initialVolume}%"></div>
+    <div class="music-dock__record" aria-hidden="true"><span></span></div>
+    <div class="music-dock__main"><label class="music-dock__queue-label" for="music-queue">Queue</label><select id="music-queue" aria-label="Select music queue"><option value="roselia"${initialQueue === 'roselia' ? ' selected' : ''}>Roselia</option><option value="ras"${initialQueue === 'ras' ? ' selected' : ''}>RAISE A SUILEN</option></select>
+      <div class="music-dock__title" id="music-title">${queues[initialQueue].label}</div><div class="music-dock__timeline"><span id="music-time">00:00 / 00:00</span><input id="music-seek" type="range" min="0" max="1000" value="0" aria-label="Seek" aria-valuetext="00:00"></div>
+      <div class="music-dock__controls"><button type="button" id="music-prev" aria-label="Previous track" title="Previous track">|◀</button><button type="button" id="music-toggle" aria-label="Play" aria-pressed="false" title="Play">▶</button><button type="button" id="music-next" aria-label="Next track" title="Next track">▶|</button></div><p class="music-dock__status" id="music-status" role="status" aria-live="polite"></p></div>`;
+  document.body.classList.add('has-music-dock');
+  document.body.append(root);
+  const byId = id => document.getElementById(id);
+  const queue = byId('music-queue'), title = byId('music-title'), status = byId('music-status');
+  const volume = byId('music-volume'), seek = byId('music-seek'), time = byId('music-time'), toggle = byId('music-toggle');
+  let player = null, draggingSeek = false, muted = false, rememberedVolume = initialVolume;
+  const fmt = value => { const n = Math.max(0, Math.floor(Number(value) || 0)); return `${String(Math.floor(n / 60)).padStart(2, '0')}:${String(n % 60).padStart(2, '0')}`; };
+  const setPlaying = value => { toggle.setAttribute('aria-label', value ? 'Pause' : 'Play'); toggle.title = value ? 'Pause' : 'Play'; toggle.setAttribute('aria-pressed', String(value)); toggle.textContent = value ? 'Ⅱ' : '▶'; root.classList.toggle('is-playing', value); };
+  const refresh = () => { if (!player) return; const current = player.getCurrentTime?.() || 0, duration = player.getDuration?.() || 0; time.textContent = `${fmt(current)} / ${fmt(duration)}`; if (!draggingSeek) { seek.value = String(duration ? Math.round(current / duration * 1000) : 0); seek.setAttribute('aria-valuetext', fmt(current)); } const data = player.getVideoData?.(); if (data?.title) title.textContent = data.title; };
+  const cueSelected = () => { const key = queue.value; safeSet(storage.queue, key); title.textContent = queues[key].label; time.textContent = '00:00 / 00:00'; seek.value = '0'; setPlaying(false); if (player) player.cuePlaylist({ list: queues[key].playlist, listType: 'playlist', index: 0 }); };
+  queue.addEventListener('change', cueSelected);
+  volume.addEventListener('input', () => { const v = Number(volume.value); rememberedVolume = v; muted = false; volume.setAttribute('aria-valuetext', `${v}%`); safeSet(storage.volume, String(v)); if (player) { player.setVolume(v); player.unMute(); } byId('music-mute').setAttribute('aria-label', 'Mute'); });
+  byId('music-mute').addEventListener('click', event => { muted = !muted; if (player) muted ? player.mute() : player.unMute(); if (!muted && player) player.setVolume(rememberedVolume); event.currentTarget.setAttribute('aria-label', muted ? 'Unmute' : 'Mute'); event.currentTarget.title = muted ? 'Unmute' : 'Mute'; });
+  byId('music-prev').addEventListener('click', () => player?.previousVideo()); byId('music-next').addEventListener('click', () => player?.nextVideo());
+  toggle.addEventListener('click', () => { if (!player) { status.textContent = 'YouTube player is not ready.'; return; } const state = player.getPlayerState?.(); if (state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING) player.pauseVideo(); else player.playVideo(); });
+  seek.addEventListener('pointerdown', () => { draggingSeek = true; });
+  seek.addEventListener('input', () => { const duration = player?.getDuration?.() || 0, seconds = duration * Number(seek.value) / 1000; seek.setAttribute('aria-valuetext', fmt(seconds)); time.textContent = `${fmt(seconds)} / ${fmt(duration)}`; });
+  const commitSeek = () => { if (draggingSeek && player?.seekTo) player.seekTo((player.getDuration?.() || 0) * Number(seek.value) / 1000, true); draggingSeek = false; };
+  seek.addEventListener('change', commitSeek); seek.addEventListener('pointerup', commitSeek); seek.addEventListener('keyup', event => { if (['ArrowLeft', 'ArrowRight', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key) && player?.seekTo) player.seekTo((player.getDuration?.() || 0) * Number(seek.value) / 1000, true); });
+  window.onYouTubeIframeAPIReady = () => { player = new YT.Player('bands-player-frame', { playerVars: { autoplay: 0, playsinline: 1, controls: 0 }, events: { onReady: () => { player.setVolume(initialVolume); cueSelected(); window.setInterval(refresh, 500); }, onStateChange: event => { setPlaying(event.data === YT.PlayerState.PLAYING || event.data === YT.PlayerState.BUFFERING); if (event.data === YT.PlayerState.CUED) { status.textContent = ''; refresh(); } if (event.data === YT.PlayerState.PLAYING) { status.textContent = ''; refresh(); } }, onError: () => { status.textContent = 'The YouTube playlist could not be loaded. Open a music video on YouTube instead.'; } } }); };
+  const api = document.createElement('script'); api.src = 'https://www.youtube.com/iframe_api'; api.onerror = () => { status.textContent = 'YouTube player could not load. Check your connection or open a music video on YouTube.'; }; document.head.append(api);
 })();
