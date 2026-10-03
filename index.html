@@ -15,11 +15,22 @@
       </nav>
     </header>
     <main class="home-main">
-      <aside id="topic" aria-live="polite" aria-atomic="true">
-        <p class="mono" id="category">PROFILE / INTRODUCTION</p>
-        <h1 id="title">關於我</h1>
-        <p id="description">歡迎來到我的個人地圖。</p>
-      </aside>
+      <section id="profile" aria-labelledby="profile-name">
+        <div class="section-label">PROFILE / 介紹 <span>01</span></div>
+        <div class="identity">
+          <p class="mono">ABOUT ME</p>
+          <div class="name"><h1 id="profile-name">林玄棣.</h1><span class="avatar" aria-hidden="true">玄</span></div>
+          <p class="subtitle">精算與資料分析</p>
+          <p class="bio">成功大學數學系畢業，現從事精算相關工作。工作涵蓋商品損失率、獲利分析與跨部門合作；我持續學習統計方法，希望讓分析更有依據，也更容易被使用。</p>
+          <p class="credentials">國立成功大學｜數學系學士</p>
+        </div>
+        <article id="topic" aria-live="polite" aria-atomic="true">
+          <p class="mono" id="category">PROFILE / INTRODUCTION</p>
+          <h2 id="title">關於我</h2>
+          <p id="description">用數學的思考方式理解資料，用清楚的分析回答實際問題。</p>
+          <div id="topic-content"></div>
+        </article>
+      </section>
       <section id="map" aria-labelledby="map-heading">
         <div class="section-label" id="map-heading">PERSONAL ROUTE MAP <span>05 TOPICS</span></div>
         <svg class="route-map" viewBox="0 0 600 600" role="group" aria-labelledby="map-title map-description">
