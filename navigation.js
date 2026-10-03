@@ -1,6 +1,6 @@
 (() => {
   if (window.siteNavigation) return;
-  const routes = new Set(['index.html', 'career.html', 'voice.html', 'bands.html', 'projects.html', 'ramen.html']);
+  const routes = new Set(['index.html', 'career.html', 'voice.html', 'bands.html', 'projects.html', 'ramen.html', 'resume.html']);
   let routeAbort = null;
   let routeObservers = [];
   let routeRestores = [];
@@ -70,13 +70,16 @@
   };
 
   const runPageScripts = async (doc, generation) => {
-    const scripts = [...doc.querySelectorAll('.page ~ script[src], body > script[src]')];
+    const scripts = [...doc.querySelectorAll('.page ~ script, body > script')];
     for (const script of scripts) {
-      const url = new URL(script.getAttribute('src'), location.href);
-      if (url.origin !== location.origin) continue;
-      const response = await fetch(url.href, { credentials: 'same-origin' });
-      if (!response.ok) throw new Error(`Could not load ${url.pathname}`);
-      const source = await response.text();
+      let source = script.textContent;
+      if (script.src) {
+        const url = new URL(script.getAttribute('src'), location.href);
+        if (url.origin !== location.origin) continue;
+        const response = await fetch(url.href, { credentials: 'same-origin' });
+        if (!response.ok) throw new Error(`Could not load ${url.pathname}`);
+        source = await response.text();
+      }
       if (generation !== routeGeneration) return;
       // Function scope isolates classic-script lexical declarations so routes can be revisited.
       (new Function(source))();
@@ -103,6 +106,10 @@
       const nextBackdrop = parsed.body.querySelector(':scope > .bands-backdrop');
       if (nextBackdrop) document.body.insertBefore(document.importNode(nextBackdrop, true), document.querySelector('body > .page'));
       document.title = parsed.title;
+      const hasMusicDock = document.body.classList.contains('has-music-dock');
+      document.body.classList.remove('home-page', 'resume-page');
+      [...parsed.body.classList].filter(className => className !== 'has-music-dock').forEach(className => document.body.classList.add(className));
+      document.body.classList.toggle('has-music-dock', hasMusicDock);
       if (parsed.body.dataset.page) document.body.dataset.page = parsed.body.dataset.page;
       else delete document.body.dataset.page;
       if (historyMode === 'push') history.pushState({}, '', url.pathname + url.search + url.hash);

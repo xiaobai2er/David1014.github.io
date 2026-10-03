@@ -169,3 +169,16 @@ body.home-page{--bg:#101214;--text:#e7e5df;--muted:#999b9c;--border:#303336;--re
 @media(max-width:420px){.home-page .identity h1{font-size:clamp(30px,9vw,38px)}.home-page .identity .avatar{width:52px;height:60px}.home-page .identity .bio{font-size:14px}}
 @media(max-width:420px){.home-page .home-main{gap:24px;padding:26px 0 36px}.home-page .route-node text{font-size:20px}.home-page .band-subitem text{font-size:14px}.home-page .resume-node text{font-size:21px}}
 @media(prefers-reduced-motion:reduce){.home-page #topic,.home-page #topic h1,.home-page .route-node .node-ring,.home-page .resume-node circle,.home-page .band-subitems{transition:none}}
+
+[data-reveal]{transition-delay:var(--reveal-delay,0ms)}
+
+/* Let the text inside each revealed home panel arrive in a short, staggered drift. */
+.home-page [data-reveal] :is(h1,h2,h3,p){transition:opacity .62s ease,transform .72s cubic-bezier(.2,.7,.25,1);}
+.home-page [data-reveal].reveal-pending :is(h1,h2,h3){opacity:0;transform:translate3d(0,12px,0);}
+.home-page [data-reveal].reveal-pending p{opacity:0;transform:translate3d(0,8px,0);}
+.home-page [data-reveal] :is(h1,h2,h3){transition-delay:calc(var(--reveal-delay,0ms) + 70ms);}
+.home-page [data-reveal] p{transition-delay:calc(var(--reveal-delay,0ms) + 130ms);}
+.home-page [data-reveal]:not(.reveal-pending) :is(h1,h2,h3,p){opacity:1;transform:none;}
+@media(prefers-reduced-motion:reduce){.home-page [data-reveal] :is(h1,h2,h3,p){transition:none;opacity:1;transform:none}}
+
+.home-page #profile .name-text{display:flex;flex-direction:column;align-items:flex-start}.home-page #profile .romanization{display:block;margin:-4px 0 8px;font-size:12px;letter-spacing:.08em;color:var(--muted)}

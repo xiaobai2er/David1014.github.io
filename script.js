@@ -121,7 +121,7 @@ if (profile && document.querySelector('#profile-name')) {
   document.querySelector('.credentials').textContent = profile.education;
   const tools = document.createElement('p');
   tools.className = 'mono';
-  tools.textContent = profile.capabilities.find(item => item.label === '工具')?.value || '';
+  tools.textContent = profile.capabilities.find(item => item.value.startsWith('SAS'))?.value || 'SAS · SQL · JAVA';
   document.querySelector('.identity').append(tools);
 }
 

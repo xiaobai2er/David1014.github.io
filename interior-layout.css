@@ -85,6 +85,21 @@ body.resume-page .resume-section h2 {
   line-height: 1.2;
 }
 
+/* Text gets its own directional arrival inside the broader section reveal. */
+body:is([data-page="career"], [data-page="bands"], [data-page="projects"], [data-page="ramen"], .resume-page) [data-reveal] :is(h1,h2,h3,p) {
+  transition: opacity .62s ease, transform .72s cubic-bezier(.2,.7,.25,1);
+}
+body:is([data-page="career"], [data-page="bands"], [data-page="projects"], [data-page="ramen"], .resume-page) [data-reveal].reveal-pending :is(h1,h2,h3) {
+  opacity: 0; transform: translate3d(0, 12px, 0); transition-delay: calc(var(--reveal-delay, 0ms) + 70ms);
+}
+body:is([data-page="career"], [data-page="bands"], [data-page="projects"], [data-page="ramen"], .resume-page) [data-reveal].reveal-pending p {
+  opacity: 0; transform: translate3d(0, 8px, 0); transition-delay: calc(var(--reveal-delay, 0ms) + 130ms);
+}
+body:is([data-page="career"], [data-page="bands"], [data-page="projects"], [data-page="ramen"], .resume-page) [data-reveal]:not(.reveal-pending) :is(h1,h2,h3,p) { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  body:is([data-page="career"], [data-page="bands"], [data-page="projects"], [data-page="ramen"], .resume-page) [data-reveal] :is(h1,h2,h3,p) { transition: none; opacity: 1; transform: none; }
+}
+
 body[data-page="career"] .detail-section > p:not(.mono),
 body[data-page="projects"] .detail-section > p:not(.mono),
 body[data-page="bands"] .band-section p:not(.mono),

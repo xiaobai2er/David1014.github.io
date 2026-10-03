@@ -4,7 +4,7 @@ window.PORTFOLIO = {
   yukiCover: './yuki-cover.jpg',
   name: '林玄棣',
   initials: '玄棣',
-  role: '精算與資料分析',
+  role: '國泰產險 數理精算人員',
   location: '台灣',
   education: '國立成功大學｜數學系學士',
   lead: '用數學的思考方式理解資料，用清楚的分析回答實際問題。',
@@ -17,7 +17,7 @@ window.PORTFOLIO = {
   ],
   capabilities: [
     { label: '分析主題', value: '損失率、商品獲利、統計分析' },
-    { label: '工具', value: 'SAS、SQL、R、Python' },
+    { label: '工具', value: 'SAS · SQL · JAVA' },
     { label: '合作方式', value: '問題拆解、清楚溝通、謹慎驗證' }
   ],
   milestones: [
