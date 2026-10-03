@@ -345,3 +345,121 @@
   .voice-page .voice-account-list { grid-template-columns: minmax(0, 1fr); }
   .voice-page .voice-account-list a { min-height: 48px; }
 }
+/* The four paired roles lead the section; the complete text-led roster follows in one compact grid. */
+.voice-page .role-cards--featured {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(16px, 2.4vw, 28px);
+  margin-top: clamp(28px, 4vw, 44px);
+}
+.voice-page .role-cards--featured .role-card {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  padding: clamp(18px, 2.5vw, 30px);
+}
+.voice-page .role-cards--featured .role-card:nth-child(even) { grid-template-columns: minmax(0, 1fr); }
+.voice-page .role-cards--featured .role-card:nth-child(even) > .role-media-pair,
+.voice-page .role-cards--featured .role-card:nth-child(even) > div:last-child { grid-column: 1; grid-row: auto; }
+.voice-page .role-cards--featured .role-card img { height: clamp(190px, 24vw, 320px); }
+.voice-page .role-cards--featured .role-card h3 { font-size: clamp(1.35rem, 2.1vw, 1.8rem); }
+.voice-page .role-cards--gallery {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+  align-items: stretch;
+  gap: 14px;
+  margin-top: 22px;
+}
+.voice-page .role-cards--gallery .role-card,
+.voice-page .role-cards--gallery .role-card:nth-child(even) {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  padding: 14px;
+  background: linear-gradient(145deg, #1b2632, #151e28);
+  box-shadow: 0 10px 28px #0002;
+}
+.voice-page .role-cards--gallery .role-card:nth-child(even) > .role-image-link,
+.voice-page .role-cards--gallery .role-card:nth-child(even) > div:last-child { grid-column: auto; grid-row: auto; }
+.voice-page .role-cards--gallery .role-card .role-image-link img { height: 130px; object-fit: contain; }
+.voice-page .role-cards--gallery .role-card h3 { margin: 0 0 5px; font-size: 1.18rem; line-height: 1.3; }
+.voice-page .role-cards--gallery .role-card h3 small { margin-top: 3px; font-size: .68em; }
+.voice-page .role-cards--gallery .role-card > div:last-child > p { margin: 5px 0; font-size: .82rem; line-height: 1.55; }
+.voice-page .role-cards--gallery .role-card .source-note { font-size: .68rem; }
+.voice-page .role-kind { color: var(--voice-accent); font-size: .86em; }
+.voice-page .role-art-unavailable {
+  display: grid;
+  min-height: 82px;
+  place-items: center;
+  border: 1px dashed var(--voice-line);
+  color: var(--voice-soft);
+  font-size: .72rem;
+  letter-spacing: .04em;
+}
+.voice-page .role-roster-source { margin: 24px 0 0; font-size: .76rem; }
+@media (max-width: 760px) {
+  .voice-page .role-cards--featured { grid-template-columns: minmax(0, 1fr); }
+  .voice-page .role-cards--featured .role-card { padding: 18px; }
+  .voice-page .role-cards--featured .role-card img { height: clamp(190px, 54vw, 290px); }
+  .voice-page .role-cards--gallery { grid-template-columns: repeat(auto-fit, minmax(min(100%, 155px), 1fr)); gap: 10px; }
+  .voice-page .role-cards--gallery .role-card { padding: 11px; }
+  .voice-page .role-cards--gallery .role-card .role-image-link img { height: 112px; }
+}
+/* Paired performance cards and the anime roster use separate responsive grids. */
+.voice-page .role-cards {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+  align-items: stretch;
+  gap: 14px;
+  margin-top: clamp(28px, 4vw, 44px);
+}
+.voice-page .role-cards .role-card,
+.voice-page .role-cards .role-card:nth-child(even) {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  min-width: 0;
+  padding: 14px;
+  background: linear-gradient(145deg, #1b2632, #151e28);
+  box-shadow: 0 10px 28px #0002;
+}
+.voice-page .role-cards .role-card:nth-child(even) > .role-image-link,
+.voice-page .role-cards .role-card:nth-child(even) > .role-media-pair,
+.voice-page .role-cards .role-card:nth-child(even) > div:last-child { grid-column: auto; grid-row: auto; }
+.voice-page .role-cards .role-card--paired {
+  display: grid;
+  grid-column: span 2;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: 16px;
+  padding: clamp(18px, 2.5vw, 30px);
+}
+.voice-page .role-cards .role-card--paired:nth-child(even) { grid-template-columns: minmax(0, 1fr); }
+.voice-page .role-cards .role-card--paired .role-media-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.voice-page .role-cards .role-card--paired img { height: clamp(190px, 24vw, 300px); }
+.voice-page .role-cards .role-card--paired h3 { font-size: clamp(1.35rem, 2.1vw, 1.8rem); }
+.voice-page .role-cards .role-card--compact .role-image-link img { height: 130px; object-fit: contain; }
+.voice-page .role-cards .role-card--compact h3 { margin: 0 0 5px; font-size: 1.18rem; line-height: 1.3; }
+.voice-page .role-cards .role-card--compact h3 small { margin-top: 3px; font-size: .68em; }
+.voice-page .role-cards .role-card--compact > div:last-child > p { margin: 5px 0; font-size: .82rem; line-height: 1.55; }
+.voice-page .role-cards .role-card--compact .source-note { font-size: .68rem; }
+.voice-page .role-kind { color: var(--voice-accent); font-size: .86em; }
+.voice-page .role-art-unavailable {
+  display: grid;
+  min-height: 82px;
+  place-items: center;
+  border: 1px dashed var(--voice-line);
+  color: var(--voice-soft);
+  font-size: .72rem;
+  letter-spacing: .04em;
+}
+.voice-page .role-roster-source { margin: 24px 0 0; font-size: .76rem; }
+@media (max-width: 760px) {
+  .voice-page .role-cards { grid-template-columns: repeat(auto-fit, minmax(min(100%, 155px), 1fr)); gap: 10px; }
+  .voice-page .role-cards .role-card--paired { grid-column: 1 / -1; padding: 18px; }
+  .voice-page .role-cards .role-card--paired img { height: clamp(190px, 54vw, 290px); }
+  .voice-page .role-cards .role-card--compact { padding: 11px; }
+  .voice-page .role-cards .role-card--compact .role-image-link img { height: 112px; }
+}
+
+.voice-page .role-card--note { justify-content: center; min-height: 150px; }
+.voice-page .role-card--note > div { width: 100%; }
+.voice-page .role-card--note p { margin: 5px 0; }

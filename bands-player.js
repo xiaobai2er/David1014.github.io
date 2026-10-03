@@ -116,6 +116,26 @@
     const paused = player.getPlayerState?.() !== YT.PlayerState.PLAYING && player.getPlayerState?.() !== YT.PlayerState.BUFFERING;
     loadPlaylist(targetIndex, paused);
   };
+  const advanceEndedTrack = () => {
+    const trackCount = queues[queue.value].videos?.length ?? (player.getPlaylist?.() || []).length;
+    const currentIndex = playlistPosition();
+    if (currentIndex < 0 || currentIndex >= trackCount) {
+      status.textContent = 'Could not determine the current track. Please select a track to continue.';
+      setPlaying(false);
+      return;
+    }
+    const nextIndex = currentIndex + 1;
+    if (nextIndex >= trackCount) {
+      playlistIndex = currentIndex;
+      setPlaying(false);
+      status.textContent = 'End of playlist.';
+      return;
+    }
+    // ENDED is already a playback transition; load the next item in play mode.
+    // In particular, do not use moveTrack, which preserves a paused state.
+    suppressLoadPlayback = false;
+    loadPlaylist(nextIndex, false);
+  };
   queue.addEventListener('change', cueSelected);
   volume.addEventListener('input', () => { const v = Number(volume.value); rememberedVolume = v; muted = false; volume.setAttribute('aria-valuetext', `${v}%`); safeSet(storage.volume, String(v)); if (player) { if (suppressLoadPlayback) { player.setVolume(0); player.mute(); } else { player.setVolume(v); player.unMute(); } } byId('music-mute').setAttribute('aria-label', 'Mute'); });
   byId('music-mute').addEventListener('click', event => { muted = !muted; if (player) { if (suppressLoadPlayback) { player.setVolume(0); player.mute(); } else { muted ? player.mute() : player.unMute(); if (!muted) player.setVolume(rememberedVolume); } } event.currentTarget.setAttribute('aria-label', muted ? 'Unmute' : 'Mute'); event.currentTarget.title = muted ? 'Unmute' : 'Mute'; });
@@ -140,6 +160,8 @@
           refresh();
         } else if (event.data === YT.PlayerState.PLAYING) {
           refresh();
+        } else if (event.data === YT.PlayerState.ENDED) {
+          advanceEndedTrack();
         }
       },
       onError: () => { playlistReady = false; status.textContent = 'The YouTube playlist could not be loaded. Check that the playlist is public, or open a music video on YouTube instead.'; },
