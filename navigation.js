@@ -49,6 +49,26 @@
     }
   };
 
+  const syncStylesheets = doc => {
+    const currentLinks = [...document.querySelectorAll('head link[rel~="stylesheet"]')];
+    const nextLinks = [...doc.querySelectorAll('head link[rel~="stylesheet"]')];
+    const key = link => `${link.href}\n${link.media}`;
+    const available = new Map();
+    currentLinks.forEach(link => {
+      const linkKey = key(link);
+      if (!available.has(linkKey)) available.set(linkKey, []);
+      available.get(linkKey).push(link);
+    });
+
+    const retained = new Set();
+    for (const link of nextLinks) {
+      const match = available.get(key(link))?.shift();
+      if (match) retained.add(match);
+      else document.head.appendChild(document.importNode(link, true));
+    }
+    currentLinks.forEach(link => { if (!retained.has(link)) link.remove(); });
+  };
+
   const runPageScripts = async (doc, generation) => {
     const scripts = [...doc.querySelectorAll('.page ~ script[src], body > script[src]')];
     for (const script of scripts) {
@@ -77,6 +97,7 @@
       if (!nextPage || !currentPage) return false;
 
       cleanupRoute();
+      syncStylesheets(parsed);
       currentPage.replaceWith(document.importNode(nextPage, true));
       document.querySelector('body > .bands-backdrop')?.remove();
       const nextBackdrop = parsed.body.querySelector(':scope > .bands-backdrop');
