@@ -1,205 +1,297 @@
-/* Voice page redesign. Every rule is scoped to the page root. */
+/* Editorial layout for the voice profile. All selectors stay inside this page. */
 .voice-page {
-  --voice-ink: #f0eee9;
-  --voice-soft: #bcc5ce;
-  --voice-accent: #d5a9c4;
+  --voice-ink: #f4f1ec;
+  --voice-soft: #c3cbd3;
+  --voice-accent: #e0b8cf;
   --voice-line: #ffffff24;
+  --voice-panel: #19232e;
   max-width: 1320px;
-  padding: 48px 0 100px;
+  padding: clamp(48px, 7vw, 96px) 0 112px;
   color: var(--voice-ink);
 }
-.voice-page > .mono { color: var(--voice-accent); letter-spacing: .22em; }
-.voice-page > h1 { font-size: clamp(3.2rem, 8vw, 7.8rem); letter-spacing: -.055em; line-height: 1.1; margin: 12px 0 18px; }
-.voice-page > .detail-lead { font-size: clamp(1rem, 1.6vw, 1.35rem); color: var(--voice-soft); margin: 0; }
-.voice-page .voice-jumps { position: sticky; top: 0; z-index: 5; margin: 34px 0 56px; padding: 14px 18px; gap: 12px 28px; border-block: 1px solid var(--voice-line); background: #111822ed; backdrop-filter: blur(12px); }
-.voice-page .voice-jumps a { color: var(--voice-soft); transition: color .2s ease; }
-.voice-page .voice-jumps a:hover, .voice-page .voice-jumps a:focus-visible { color: var(--voice-accent); }
-.voice-page #yuki.voice-feature { grid-template-columns: minmax(0, 1fr) minmax(360px, .88fr); gap: clamp(32px, 6vw, 88px); align-items: center; padding: clamp(28px, 5vw, 72px); margin: 0 calc(-1 * clamp(0px, 2vw, 22px)) 94px; border: 1px solid var(--voice-line); border-radius: 4px; background: radial-gradient(ellipse at 85% 15%, #d5a9c41c, transparent 45%), linear-gradient(135deg,#1c2733,#151d27); }
-.voice-page .voice-feature > div { min-width: 0; }
-.voice-page .voice-feature h2, .voice-page .detail-section h2 { font-size: clamp(2rem, 3.7vw, 3.4rem); line-height: 1.3; color: var(--voice-ink); }
-.voice-page .voice-feature .mono, .voice-page .detail-section .mono { color: var(--voice-accent); }
-.voice-page .roman-name { color: var(--voice-accent); font-size: clamp(1.15rem,2vw,1.65rem); letter-spacing: .07em; }
-.voice-page .profile-facts { display: grid; grid-template-columns: 8.5rem minmax(0,1fr); gap: 10px 18px; padding: 24px 0; margin: 26px 0; border-block: 1px solid var(--voice-line); }
-.voice-page .profile-facts dt { color: var(--voice-accent); margin: 0; }
-.voice-page .profile-facts dd { min-width: 0; color: var(--voice-soft); }
-.voice-page .profile-facts .source-note { display: inline; }
-.voice-page .voice-feature > div > p:not(.mono):not(.roman-name):not(.source-note) { max-width: 60ch; color: var(--voice-soft); }
-.voice-page .source-note { color: #aab4c0; }
-.voice-page .source-note a { text-decoration-color: #d5a9c488; }
-.voice-page .voice-feature figure { position: relative; }
-.voice-page .voice-cover { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 24%; border-radius: 3px; box-shadow: 0 30px 80px #0008; }
-.voice-page .detail-section { padding: clamp(36px, 6vw, 78px) 0; margin: 0; border-top: 1px solid var(--voice-line); scroll-margin-top: 84px; }
-.voice-page .detail-section > div:first-child { max-width: 900px; }
-.voice-page .detail-section p { color: var(--voice-soft); max-width: 78ch; }
-.voice-page .detail-section h2 { margin: 6px 0 20px; }
-.voice-page .voice-timeline { display: grid; grid-template-columns: minmax(240px,.72fr) minmax(0,1.28fr); gap: clamp(24px,6vw,80px); }
-.voice-page .voice-timeline .timeline-intro { align-self: start; }
-.voice-page .voice-timeline-list { list-style: none; margin: 0; padding: 0; }
-.voice-page .voice-timeline-item { display: grid; grid-template-columns: 105px minmax(0,1fr); gap: 22px; align-items: start; }
-.voice-page .voice-timeline-date { color: var(--voice-accent); font: 13px/1.8 monospace; padding-top: 18px; }
-.voice-page .voice-timeline-card { min-width: 0; margin: 0; padding: 18px 0 18px 24px; border-left: 1px solid var(--voice-accent); }
-.voice-page .voice-timeline-card h3 { font-weight: 400; line-height: 1.55; color: var(--voice-ink); }
-.voice-page .voice-timeline-card p { font-size: 14px; }
-.voice-page .voice-timeline-card a { text-decoration: underline; text-underline-offset: 3px; }
-.voice-page .role-cards { display: grid; grid-template-columns: 1fr; gap: 18px; margin-top: 34px; }
-.voice-page .role-card, .voice-page .role-card--paired { grid-column: auto; grid-template-columns: minmax(300px, .9fr) minmax(0,1.1fr); align-items: center; gap: clamp(24px,5vw,70px); padding: clamp(18px,3vw,38px); margin: 0; border: 1px solid var(--voice-line); border-left: 1px solid var(--voice-line); background: #19232e; border-radius: 3px; }
-.voice-page .role-card h3 { color: var(--voice-ink); font-size: clamp(1.4rem,2.2vw,2rem); line-height: 1.35; }
-.voice-page .role-card h3 small { color: var(--voice-accent); font-size: .62em; margin-top: 7px; }
-.voice-page .role-card > div:last-child > p { font-size: 15px; }
-.voice-page .role-card .source-note { font-size: 12px; }
-.voice-page .role-media-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: stretch; }
-.voice-page .role-image-link { min-width: 0; overflow: hidden; background: #101720; }
-.voice-page .role-card img { width: 100%; height: clamp(180px,23vw,300px); object-fit: contain; background: #101720; transition: transform .35s ease; }
-.voice-page .role-image-link:hover img { transform: scale(1.025); }
-.voice-page .role-media-credit { grid-column: 1 / -1; color: var(--voice-soft); font-size: 11px; }
-.voice-page .role-card:not(.role-card--paired) > .role-image-link img { height: clamp(200px,25vw,320px); }
-.voice-page a:focus-visible { outline-color: var(--voice-accent); }
-@media (max-width: 760px) {
-  .voice-page { padding: 34px 0 60px; }
-  .voice-page .voice-jumps { position: static; margin: 24px 0 34px; padding-inline: 0; gap: 8px 18px; }
-  .voice-page #yuki.voice-feature { grid-template-columns: minmax(0,1fr); gap: 26px; padding: 24px 20px; margin: 0 0 56px; }
-  .voice-page .voice-feature figure { grid-row: 1; }
-  .voice-page .voice-cover { max-height: 72vh; aspect-ratio: 4 / 4.3; }
-  .voice-page .profile-facts { grid-template-columns: 6.6rem minmax(0,1fr); gap: 8px 12px; }
-  .voice-page .profile-facts dd { overflow-wrap: anywhere; }
-  .voice-page .voice-timeline { grid-template-columns: 1fr; gap: 14px; }
-  .voice-page .voice-timeline-item { grid-template-columns: 1fr; gap: 0; }
-  .voice-page .voice-timeline-date { padding: 0; }
-  .voice-page .role-card, .voice-page .role-card--paired { grid-template-columns: minmax(0,1fr); gap: 20px; padding: 18px; }
-  .voice-page .role-media-pair { gap: 8px; }
-  .voice-page .role-card img, .voice-page .role-card:not(.role-card--paired) > .role-image-link img { height: clamp(150px,48vw,260px); }
-}
-@media (max-width: 380px) {
-  .voice-page .profile-facts { grid-template-columns: 1fr; gap: 2px; }
-  .voice-page .profile-facts dd { margin-bottom: 10px; }
-  .voice-page .role-card, .voice-page .role-card--paired { padding: 13px; }
-  .voice-page .role-media-pair { grid-template-columns: minmax(0,1fr); }
-  .voice-page .role-media-credit { grid-column: 1; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .voice-page *, .voice-page *::before, .voice-page *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+
+.voice-page > .mono,
+.voice-page .voice-feature .mono,
+.voice-page .detail-section .mono {
+  color: var(--voice-accent);
+  letter-spacing: .2em;
 }
 
-/* Focused story tiles and alternating role rows. */
+.voice-page > h1 {
+  max-width: 12ch;
+  margin: 12px 0 20px;
+  font-size: clamp(3.5rem, 9vw, 8rem);
+  line-height: .98;
+  letter-spacing: -.065em;
+}
+
+.voice-page > .detail-lead {
+  max-width: 42ch;
+  margin: 0;
+  color: var(--voice-soft);
+  font-size: clamp(1.15rem, 2vw, 1.55rem);
+  line-height: 1.8;
+}
+
+.voice-page > .mono { animation: voice-enter-left .72s cubic-bezier(.2, .7, .25, 1) both; }
+.voice-page > h1 { animation: voice-enter-left .86s cubic-bezier(.2, .7, .25, 1) .08s both; }
+.voice-page > .detail-lead { animation: voice-enter-right .82s cubic-bezier(.2, .7, .25, 1) .18s both; }
+
+@keyframes voice-enter-left {
+  from { opacity: 0; transform: translate3d(-48px, 0, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes voice-enter-right {
+  from { opacity: 0; transform: translate3d(40px, 0, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+.voice-page .voice-jumps {
+  position: sticky;
+  z-index: 5;
+  top: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 30px;
+  margin: clamp(34px, 5vw, 64px) 0 clamp(54px, 8vw, 104px);
+  padding: 16px 0;
+  border-block: 1px solid var(--voice-line);
+  background: #111822ed;
+  backdrop-filter: blur(12px);
+}
+
+.voice-page .voice-jumps a {
+  color: var(--voice-soft);
+  font-size: .9rem;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+  transition: color .2s ease;
+}
+
+.voice-page .voice-jumps a:hover,
+.voice-page .voice-jumps a:focus-visible { color: var(--voice-accent); }
+
+.voice-page #yuki.voice-feature {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(350px, .8fr);
+  align-items: center;
+  gap: clamp(42px, 8vw, 120px);
+  margin: 0 calc(-1 * clamp(0px, 2vw, 24px)) clamp(74px, 10vw, 132px);
+  padding: clamp(30px, 6vw, 88px);
+  border: 1px solid var(--voice-line);
+  background: radial-gradient(ellipse at 82% 12%, #d5a9c420, transparent 44%), linear-gradient(135deg, #202b37, #151d27 78%);
+  box-shadow: 0 28px 90px #0002;
+}
+
+.voice-page .voice-feature > div,
+.voice-page .voice-feature figure { min-width: 0; }
+
+.voice-page .voice-feature h2,
+.voice-page .detail-section h2 {
+  color: var(--voice-ink);
+  font-size: clamp(2.3rem, 5vw, 4.5rem);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -.04em;
+}
+
+.voice-page .voice-feature h2 { margin: 10px 0 4px; }
+.voice-page .roman-name { color: var(--voice-accent); font-size: clamp(1.15rem, 2vw, 1.55rem); letter-spacing: .07em; }
+
+.voice-page .profile-facts {
+  display: grid;
+  grid-template-columns: minmax(7.5rem, .38fr) minmax(0, 1fr);
+  gap: 13px 22px;
+  margin: 32px 0;
+  padding: 28px 0;
+  border-block: 1px solid var(--voice-line);
+}
+
+.voice-page .profile-facts dt { margin: 0; color: var(--voice-accent); }
+.voice-page .profile-facts dd { min-width: 0; margin: 0; color: var(--voice-soft); overflow-wrap: anywhere; }
+.voice-page .profile-facts .source-note { display: inline; }
+.voice-page .voice-feature > div > p:not(.mono):not(.roman-name):not(.source-note) { max-width: 58ch; color: var(--voice-soft); line-height: 1.9; }
+.voice-page .source-note { color: #adb8c3; }
+.voice-page .source-note a { text-decoration-color: #e0b8cf88; text-underline-offset: 3px; }
+
+.voice-page .voice-feature figure { position: relative; margin: 0; }
+.voice-page .voice-cover {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: center 24%;
+  box-shadow: 0 32px 90px #0009;
+}
+
+.voice-page .detail-section {
+  min-width: 0;
+  margin: 0;
+  padding: clamp(48px, 7vw, 94px) 0;
+  border-top: 1px solid var(--voice-line);
+  scroll-margin-top: 86px;
+}
+
+.voice-page .detail-section > div:first-child { max-width: 880px; }
+.voice-page .detail-section h2 { margin: 9px 0 22px; }
+.voice-page .detail-section p { max-width: 76ch; color: var(--voice-soft); line-height: 1.9; }
+
 .voice-page .detail-section[aria-labelledby="first-impression-title"],
-.voice-page .wakayama-feature {
+.voice-page .wakayama-feature,
+.voice-page .voice-timeline {
   position: relative;
   overflow: hidden;
-  padding: clamp(28px, 5vw, 58px);
-  margin-block: 22px;
+  margin-block: 24px;
+  padding: clamp(34px, 6vw, 76px);
   border: 1px solid var(--voice-line);
-  border-radius: 4px;
-  background: linear-gradient(125deg, #202a36, #18212c 72%);
+  background: radial-gradient(ellipse at 12% 8%, #d5a9c41a, transparent 55%), linear-gradient(125deg, #202a36, #18212c 72%);
 }
+
 .voice-page .detail-section[aria-labelledby="first-impression-title"]::before,
-.voice-page .wakayama-feature::before {
-  content: "";
+.voice-page .wakayama-feature::before,
+.voice-page .voice-timeline::before {
   position: absolute;
   inset: 0 auto 0 0;
   width: 3px;
   background: var(--voice-accent);
-}
-.voice-page .detail-section[aria-labelledby="first-impression-title"] > div,
-.voice-page .wakayama-feature > div { position: relative; }
-.voice-page .detail-section[aria-labelledby="first-impression-title"] > div { max-width: 760px; }
-.voice-page .detail-section[aria-labelledby="first-impression-title"] p:not(.mono),
-.voice-page .wakayama-feature p:not(.mono) { font-size: clamp(1rem, 1.45vw, 1.2rem); line-height: 1.95; }
-.voice-page .role-card:nth-child(2),
-.voice-page .role-card:nth-child(4) { grid-template-columns: minmax(0,1.1fr) minmax(300px,.9fr); }
-.voice-page .role-card:nth-child(2) > .role-image-link,
-.voice-page .role-card:nth-child(4) > .role-media-pair { grid-column: 2; grid-row: 1; }
-.voice-page .role-card:nth-child(2) > div:last-child,
-.voice-page .role-card:nth-child(4) > div:last-child { grid-column: 1; grid-row: 1; }
-@media (max-width: 760px) {
-  .voice-page .detail-section[aria-labelledby="first-impression-title"],
-  .voice-page .wakayama-feature { padding: 26px 20px; margin-block: 14px; }
-  .voice-page .role-card:nth-child(2),
-  .voice-page .role-card:nth-child(4) { grid-template-columns: minmax(0,1fr); }
-  .voice-page .role-card:nth-child(2) > .role-image-link,
-  .voice-page .role-card:nth-child(4) > .role-media-pair,
-  .voice-page .role-card:nth-child(2) > div:last-child,
-  .voice-page .role-card:nth-child(4) > div:last-child { grid-column: 1; grid-row: auto; }
+  content: "";
 }
 
-/* Subtle entrance motion uses pages.js's existing reveal-pending state. */
-.voice-page > h1 {
-  animation: voice-title-enter .8s cubic-bezier(.2,.7,.25,1) both;
+.voice-page .detail-section[aria-labelledby="first-impression-title"] > div,
+.voice-page .wakayama-feature > div,
+.voice-page .voice-timeline > div { position: relative; }
+.voice-page .detail-section[aria-labelledby="first-impression-title"] > div { max-width: 760px; }
+.voice-page .detail-section[aria-labelledby="first-impression-title"] p:not(.mono),
+.voice-page .wakayama-feature p:not(.mono) { font-size: clamp(1.05rem, 1.55vw, 1.25rem); line-height: 1.95; }
+
+.voice-page .voice-timeline {
+  display: grid;
+  grid-template-columns: minmax(250px, .8fr) minmax(0, 1.2fr);
+  align-items: start;
+  gap: clamp(30px, 7vw, 96px);
 }
-@keyframes voice-title-enter {
-  from { opacity: 0; clip-path: inset(0 0 0 100%); transform: translate3d(-1.25em, 0, 0); }
-  to { opacity: 1; clip-path: inset(0); transform: translate3d(0, 0, 0); }
+
+.voice-page .voice-timeline .timeline-intro { align-self: start; }
+.voice-page .voice-timeline-list { margin: 0; padding: 0; list-style: none; }
+.voice-page .voice-timeline-item { display: grid; grid-template-columns: 108px minmax(0, 1fr); align-items: start; gap: 20px; }
+.voice-page .voice-timeline-date { padding-top: 18px; color: var(--voice-accent); font: 13px/1.8 monospace; }
+.voice-page .voice-timeline-card { min-width: 0; margin: 0; padding: 18px 0 18px 24px; border-left: 1px solid var(--voice-accent); }
+.voice-page .voice-timeline-card h3 { color: var(--voice-ink); font-weight: 400; line-height: 1.55; }
+.voice-page .voice-timeline-card p { font-size: 14px; }
+.voice-page .voice-timeline-card a { text-decoration: underline; text-underline-offset: 3px; }
+
+.voice-page .role-cards { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(20px, 3vw, 36px); margin-top: clamp(30px, 5vw, 58px); }
+.voice-page .role-card,
+.voice-page .role-card--paired {
+  display: grid;
+  grid-template-columns: minmax(0, .95fr) minmax(260px, 1.05fr);
+  align-items: center;
+  gap: clamp(28px, 6vw, 84px);
+  min-width: 0;
+  margin: 0;
+  padding: clamp(24px, 4.5vw, 58px);
+  border: 1px solid var(--voice-line);
+  background: linear-gradient(120deg, #1c2733, #151e28);
+  box-shadow: 0 18px 55px #0002;
 }
+
+.voice-page .role-card:nth-child(even) { grid-template-columns: minmax(260px, 1.05fr) minmax(0, .95fr); }
+.voice-page .role-card:nth-child(even) > .role-image-link,
+.voice-page .role-card:nth-child(even) > .role-media-pair { grid-column: 2; grid-row: 1; }
+.voice-page .role-card:nth-child(even) > div:last-child { grid-column: 1; grid-row: 1; }
+.voice-page .role-card > div:last-child { min-width: 0; }
+.voice-page .role-card h3 { margin: 0 0 12px; color: var(--voice-ink); font-size: clamp(1.7rem, 3vw, 2.7rem); font-weight: 400; line-height: 1.25; letter-spacing: -.025em; }
+.voice-page .role-card h3 small { display: block; margin-top: 10px; color: var(--voice-accent); font-size: .56em; letter-spacing: .02em; }
+.voice-page .role-card > div:last-child > p { font-size: clamp(.98rem, 1.3vw, 1.1rem); }
+.voice-page .role-card .source-note { font-size: .8rem; }
+.voice-page .role-media-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: 12px; min-width: 0; }
+.voice-page .role-image-link { display: block; min-width: 0; overflow: hidden; background: #101720; }
+.voice-page .role-card img { display: block; width: 100%; height: clamp(250px, 31vw, 420px); object-fit: contain; background: #101720; transition: transform .45s cubic-bezier(.2, .7, .25, 1); }
+.voice-page .role-image-link:hover img { transform: scale(1.035); }
+.voice-page .role-media-credit { grid-column: 1 / -1; color: var(--voice-soft); font-size: .72rem; line-height: 1.5; overflow-wrap: anywhere; }
+.voice-page .role-card:not(.role-card--paired) > .role-image-link img { height: clamp(290px, 36vw, 460px); }
+
+.voice-page a:focus-visible { outline: 2px solid var(--voice-accent); outline-offset: 4px; }
+
+/* pages.js applies reveal-pending before observing offscreen content on both route types. */
 .voice-page [data-reveal] {
-  transition: opacity .65s ease, transform .65s cubic-bezier(.2,.7,.25,1);
+  transition: opacity .72s ease, transform .72s cubic-bezier(.2, .7, .25, 1);
   will-change: auto;
 }
-.voice-page [data-reveal].reveal-pending {
-  opacity: 0;
-  transform: translate3d(0, 18px, 0);
-}
-.voice-page > h1[data-reveal].reveal-pending {
-  transform: translate3d(-56px, 0, 0);
-}
-.voice-page > .detail-lead[data-reveal].reveal-pending {
-  transform: translate3d(42px, 0, 0);
-}
-.voice-page .detail-section > div[data-reveal] > h2 {
-  transition: transform .72s cubic-bezier(.2,.7,.25,1);
-}
-.voice-page .detail-section > div[data-reveal].reveal-pending > h2 {
-  transform: translate3d(-48px, 0, 0);
-  transition-delay: .12s;
-}
-.voice-page .detail-section:nth-of-type(even) > div[data-reveal].reveal-pending > h2 {
-  transform: translate3d(48px, 0, 0);
-}
+
+.voice-page [data-reveal].reveal-pending { opacity: 0; transform: translate3d(0, 24px, 0); }
+.voice-page > h1[data-reveal].reveal-pending { transform: translate3d(-64px, 0, 0); }
+.voice-page > .detail-lead[data-reveal].reveal-pending { transform: translate3d(48px, 0, 0); }
+.voice-page .detail-section > div[data-reveal] > h2 { transition: transform .78s cubic-bezier(.2, .7, .25, 1); }
+.voice-page .detail-section > div[data-reveal].reveal-pending > h2 { transform: translate3d(-48px, 0, 0); transition-delay: .12s; }
+.voice-page .detail-section:nth-of-type(even) > div[data-reveal].reveal-pending > h2 { transform: translate3d(48px, 0, 0); }
 .voice-page .voice-feature figure[data-reveal].reveal-pending,
-.voice-page .role-card:nth-child(even)[data-reveal].reveal-pending {
-  transform: translate3d(14px, 8px, 0);
-}
-.voice-page .voice-jumps[data-reveal].reveal-pending { transform: translate3d(0, -10px, 0); }
+.voice-page .role-card:nth-child(even)[data-reveal].reveal-pending { transform: translate3d(24px, 12px, 0); }
+.voice-page .voice-jumps[data-reveal].reveal-pending { transform: translate3d(0, -14px, 0); }
 .voice-page .voice-feature [data-reveal] { transition-delay: .08s; }
 .voice-page .detail-section > div[data-reveal] { transition-delay: .06s; }
 .voice-page .role-card[data-reveal] { transition-delay: .04s; }
-.voice-page .role-card:nth-child(2)[data-reveal] { transition-delay: .08s; }
-.voice-page .role-card:nth-child(3)[data-reveal] { transition-delay: .12s; }
-.voice-page .role-card:nth-child(4)[data-reveal] { transition-delay: .16s; }
-.voice-page .role-card:nth-child(5)[data-reveal] { transition-delay: .20s; }
-.voice-page .voice-timeline {
-  padding: clamp(30px, 5vw, 62px);
-  margin-block: 22px;
-  border: 1px solid var(--voice-line);
-  border-radius: 4px;
-  background: radial-gradient(ellipse at 12% 8%, #d5a9c414, transparent 55%), linear-gradient(125deg, #202a36, #18212c 72%);
+.voice-page .role-card:nth-child(2)[data-reveal] { transition-delay: .1s; }
+.voice-page .role-card:nth-child(3)[data-reveal] { transition-delay: .16s; }
+.voice-page .role-card:nth-child(4)[data-reveal] { transition-delay: .22s; }
+.voice-page .role-card:nth-child(5)[data-reveal] { transition-delay: .28s; }
+.voice-page [data-reveal]:focus-within { opacity: 1; transform: none; }
+
+@media (max-width: 900px) {
+  .voice-page #yuki.voice-feature { grid-template-columns: minmax(0, 1fr) minmax(280px, .82fr); gap: 36px; }
+  .voice-page .role-card,
+  .voice-page .role-card:nth-child(even) { grid-template-columns: minmax(0, .9fr) minmax(220px, 1.1fr); gap: 28px; }
+  .voice-page .role-card:nth-child(even) > .role-image-link,
+  .voice-page .role-card:nth-child(even) > .role-media-pair { grid-column: 2; grid-row: 1; }
+  .voice-page .role-card:nth-child(even) > div:last-child { grid-column: 1; grid-row: 1; }
+  .voice-page .role-card img { height: clamp(220px, 30vw, 320px); }
 }
+
 @media (max-width: 760px) {
-  .voice-page .voice-timeline { padding: 26px 20px; margin-block: 14px; }
-  .voice-page [data-reveal].reveal-pending,
-  .voice-page .voice-feature figure[data-reveal].reveal-pending,
-  .voice-page .role-card:nth-child(even)[data-reveal].reveal-pending { transform: translate3d(0, 14px, 0); }
+  .voice-page { padding: 38px 0 68px; }
+  .voice-page > h1 { font-size: clamp(3.4rem, 16vw, 6rem); }
+  .voice-page .voice-jumps { position: static; gap: 10px 20px; margin: 28px 0 54px; padding: 13px 0; }
+  .voice-page #yuki.voice-feature { grid-template-columns: minmax(0, 1fr); gap: 28px; margin: 0 0 64px; padding: clamp(22px, 6vw, 38px); }
+  .voice-page .voice-feature figure { grid-row: 1; }
+  .voice-page .voice-cover { max-height: 72vh; aspect-ratio: 4 / 4.2; }
+  .voice-page .profile-facts { grid-template-columns: minmax(6.4rem, .34fr) minmax(0, 1fr); gap: 9px 14px; padding: 21px 0; }
+  .voice-page .voice-timeline { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .voice-page .voice-timeline-item { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .voice-page .voice-timeline-date { padding: 0; }
+  .voice-page .role-card,
+  .voice-page .role-card:nth-child(even) { grid-template-columns: minmax(0, 1fr); gap: 22px; padding: clamp(18px, 5vw, 30px); }
+  .voice-page .role-card:nth-child(even) > .role-image-link,
+  .voice-page .role-card:nth-child(even) > .role-media-pair,
+  .voice-page .role-card:nth-child(even) > div:last-child { grid-column: 1; grid-row: auto; }
+  .voice-page .role-card img,
+  .voice-page .role-card:not(.role-card--paired) > .role-image-link img { height: clamp(200px, 55vw, 320px); }
+  .voice-page .detail-section[aria-labelledby="first-impression-title"],
+  .voice-page .wakayama-feature,
+  .voice-page .voice-timeline { margin-block: 14px; padding: 28px 22px; }
 }
+
+@media (max-width: 380px) {
+  .voice-page .profile-facts { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .voice-page .profile-facts dd { margin-bottom: 10px; }
+  .voice-page .role-media-pair { grid-template-columns: minmax(0, 1fr); }
+  .voice-page .role-media-credit { grid-column: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .voice-page > h1 { animation: none !important; }
-  .voice-page [data-reveal],
-  .voice-page [data-reveal].reveal-pending {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
+  .voice-page *,
+  .voice-page *::before,
+  .voice-page *::after {
+    scroll-behavior: auto !important;
+    animation: none !important;
+    transition-duration: .01ms !important;
   }
-  .voice-page > h1[data-reveal].reveal-pending,
-  .voice-page > .detail-lead[data-reveal].reveal-pending,
+  .voice-page [data-reveal],
+  .voice-page [data-reveal].reveal-pending,
   .voice-page .detail-section > div[data-reveal] > h2,
   .voice-page .detail-section > div[data-reveal].reveal-pending > h2 {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .voice-page .detail-section > div[data-reveal].reveal-pending > h2 {
-    opacity: 1;
-    transform: none;
-    transition: none;
   }
 }
