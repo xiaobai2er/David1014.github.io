@@ -3,7 +3,7 @@ const previews = {
   resume: {
     label: 'PROFILE / INTRODUCTION',
     title: '關於我',
-    description: profile?.intro || '歡迎來到我的個人地圖。',
+    description: profile?.lead || profile?.intro || '歡迎來到我的個人地圖。',
     color: 'var(--resume)'
   },
   voice: {
@@ -45,11 +45,13 @@ function showPreview(key) {
   const preview = previews[key];
   if (!preview || key === activePreview) return;
   activePreview = key;
-  document.querySelector('#category').textContent = preview.label;
-  document.querySelector('#title').textContent = preview.title;
-  document.querySelector('#description').textContent = preview.description;
-  document.querySelector('#title').style.color = preview.color;
-  topic.style.borderColor = preview.color;
+  if (topic) {
+    document.querySelector('#category').textContent = preview.label;
+    document.querySelector('#title').textContent = preview.title;
+    document.querySelector('#description').textContent = preview.description;
+    document.querySelector('#title').style.color = preview.color;
+    topic.style.borderColor = preview.color;
+  }
   previewLinks.forEach(link => link.classList.toggle('is-previewed', link.dataset.topic === key));
 }
 
@@ -57,79 +59,60 @@ previewLinks.forEach(link => {
   const key = link.dataset.topic;
   link.addEventListener('pointerenter', () => showPreview(key));
   link.addEventListener('focus', () => showPreview(key));
-  if (key === 'resume') {
-    link.addEventListener('click', () => showPreview('resume'));
-    link.addEventListener('keydown', event => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        showPreview('resume');
-      }
-    });
-  }
 });
 
 const bandBranch = document.querySelector('#band-branch');
-const bandTrigger = bandBranch.querySelector('.node-band');
-const bandSubitems = document.querySelector('#band-subitems');
-function setBandExpanded(expanded) {
-  bandBranch.classList.toggle('is-open', expanded);
-  bandTrigger.setAttribute('aria-expanded', String(expanded));
-  bandSubitems.setAttribute('aria-hidden', String(!expanded));
-  bandSubitems.querySelectorAll('a').forEach(link => link.setAttribute('tabindex', expanded ? '0' : '-1'));
-}
-bandBranch.addEventListener('pointerenter', () => setBandExpanded(true));
-bandBranch.addEventListener('pointerleave', () => {
-  if (bandBranch.dataset.pinned !== 'true' && !bandBranch.contains(document.activeElement)) setBandExpanded(false);
-});
-bandBranch.addEventListener('focusin', () => setBandExpanded(true));
-bandBranch.addEventListener('focusout', () => {
-  window.setTimeout(() => {
+if (bandBranch) {
+  const bandTrigger = bandBranch.querySelector('.node-band');
+  const bandSubitems = document.querySelector('#band-subitems');
+  let suppressFocusOpen = false;
+  const setBandExpanded = expanded => {
+    bandBranch.classList.toggle('is-open', expanded);
+    bandTrigger.setAttribute('aria-expanded', String(expanded));
+    bandSubitems.setAttribute('aria-hidden', String(!expanded));
+    bandSubitems.toggleAttribute('inert', !expanded);
+    bandSubitems.querySelectorAll('a').forEach(link => link.setAttribute('tabindex', expanded ? '0' : '-1'));
+  };
+  bandBranch.addEventListener('pointerenter', () => setBandExpanded(true));
+  bandBranch.addEventListener('pointerleave', () => {
     if (bandBranch.dataset.pinned !== 'true' && !bandBranch.contains(document.activeElement)) setBandExpanded(false);
-  }, 0);
-});
-if (!window.__portfolioBandDisclosureInstalled) {
-  window.__portfolioBandDisclosureInstalled = true;
-  document.addEventListener('click', event => {
+  });
+  bandBranch.addEventListener('focusin', () => {
+    if (!suppressFocusOpen) setBandExpanded(true);
+  });
+  bandBranch.addEventListener('focusout', () => {
+    window.setTimeout(() => {
+      if (bandBranch.dataset.pinned !== 'true' && !bandBranch.contains(document.activeElement)) setBandExpanded(false);
+    }, 0);
+  });
+  window.addEventListener('click', event => {
     const trigger = event.composedPath().find(node => node instanceof Element && node.matches('#band-branch > .node-band'));
-    if (!trigger) return;
-    const branch = trigger.closest('#band-branch');
-    if (branch.dataset.pinned === 'true') return;
+    if (!trigger || bandBranch.dataset.pinned === 'true') return;
     event.preventDefault();
     event.stopImmediatePropagation();
-    branch.dataset.pinned = 'true';
-    branch.classList.add('is-open');
-    trigger.setAttribute('aria-expanded', 'true');
-    const items = branch.querySelector('#band-subitems');
-    items.setAttribute('aria-hidden', 'false');
-    items.querySelectorAll('a').forEach(link => link.setAttribute('tabindex', '0'));
+    bandBranch.dataset.pinned = 'true';
+    setBandExpanded(true);
   }, true);
   document.addEventListener('pointerdown', event => {
-    const branch = document.querySelector('#band-branch');
-    if (!branch || branch.contains(event.target)) return;
-    branch.dataset.pinned = 'false';
-    branch.classList.remove('is-open');
-    const trigger = branch.querySelector('.node-band');
-    trigger.setAttribute('aria-expanded', 'false');
-    const items = branch.querySelector('#band-subitems');
-    items.setAttribute('aria-hidden', 'true');
-    items.querySelectorAll('a').forEach(link => link.setAttribute('tabindex', '-1'));
+    if (bandBranch.contains(event.target)) return;
+    bandBranch.dataset.pinned = 'false';
+    setBandExpanded(false);
+  });
+  bandBranch.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && bandBranch.classList.contains('is-open')) {
+      event.preventDefault();
+      bandBranch.dataset.pinned = 'false';
+      setBandExpanded(false);
+      suppressFocusOpen = true;
+      bandTrigger.focus();
+      suppressFocusOpen = false;
+    }
   });
 }
-bandBranch.addEventListener('keydown', event => {
-  if (event.key === ' ') {
-    if (event.target === bandTrigger) {
-      event.preventDefault();
-      bandTrigger.click();
-    }
-  } else if (event.key === 'Escape') {
-    bandBranch.dataset.pinned = 'false';
-    if (event.target !== bandTrigger) bandTrigger.focus();
-    setBandExpanded(false);
-  }
-});
-showPreview('resume');
 
-if (profile) {
+if (topic) showPreview('resume');
+
+if (profile && document.querySelector('#profile-name')) {
   document.title = `${profile.name} | Personal Route Map`;
   document.querySelector('#profile-name').textContent = `${profile.name}.`;
   document.querySelector('.avatar').textContent = Array.from(profile.initials || profile.name)[0];
@@ -140,10 +123,11 @@ if (profile) {
   tools.className = 'mono';
   tools.textContent = profile.capabilities.find(item => item.label === '工具')?.value || '';
   document.querySelector('.identity').append(tools);
-  if (profile.links.email) {
-    const link = document.createElement('a');
-    link.href = `mailto:${encodeURIComponent(profile.links.email)}`;
-    link.textContent = profile.links.email;
-    document.querySelector('.contact-title').replaceChildren(link);
-  }
+}
+
+if (profile?.links?.email && document.querySelector('.contact-title')) {
+  const link = document.createElement('a');
+  link.href = `mailto:${encodeURIComponent(profile.links.email)}`;
+  link.textContent = profile.links.email;
+  document.querySelector('.contact-title').replaceChildren(link);
 }

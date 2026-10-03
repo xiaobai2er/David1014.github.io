@@ -106,7 +106,7 @@ const contentTypes = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascr
     const advancing = await page.evaluate(() => window.bandPlayer.player.getCurrentTime());
     assert.ok(advancing > initial.time, 'mock playback advances before navigation');
 
-    await page.locator('#map a.stop[href="career.html"] circle').click();
+    await page.locator('.route-node[href="career.html"]').click();
     await page.waitForURL('**/career.html');
     await page.waitForFunction(() => !window.siteNavigation.busy);
     await page.waitForSelector('#career-list');
@@ -120,8 +120,11 @@ const contentTypes = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascr
     await page.waitForURL('**/index.html');
     await page.waitForFunction(() => !window.siteNavigation.busy);
     await page.waitForSelector('#map');
-    await page.locator('#map a.stop[href="bands.html"] text').first().click();
-    await page.waitForURL('**/bands.html');
+    const bandRoute = page.locator('.route-node[href="bands.html"]');
+    await bandRoute.hover();
+    await page.waitForFunction(() => document.querySelector('.route-node[href="bands.html"]')?.getAttribute('aria-expanded') === 'true');
+    await page.locator('.band-subitem[href="bands.html#roselia"]').click();
+    await page.waitForURL('**/bands.html#roselia');
     await page.waitForFunction(() => !window.siteNavigation.busy);
     await page.waitForSelector('.bands-page');
     assert.equal(await page.locator('body > .bands-backdrop').count(), 1, 'bands backdrop is restored with its route');
