@@ -513,3 +513,35 @@
   .voice-page .wakayama-food-card h3 { font-size: 1rem; }
   .voice-page .wakayama-food-card p { font-size: .75rem; }
 }
+
+/* Paired character and performer cards use the entire gallery row on desktop. */
+.voice-page .role-cards .role-card--paired {
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(0, 1.7fr) minmax(250px, .9fr);
+  align-items: center;
+  min-height: 421.8125px;
+}
+.voice-page .role-cards .role-card--paired:nth-child(even) {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(250px, .9fr);
+}
+.voice-page .role-cards .role-card--paired .role-media-pair { min-width: 0; }
+
+@media (max-width: 900px) {
+  .voice-page .role-cards .role-card--paired {
+    grid-template-columns: minmax(0, 1.45fr) minmax(220px, .9fr);
+  }
+  .voice-page .role-cards .role-card--paired:nth-child(even) {
+    grid-template-columns: minmax(0, 1.45fr) minmax(220px, .9fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .voice-page .role-cards .role-card--paired {
+    grid-column: 1 / -1;
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+  .voice-page .role-cards .role-card--paired:nth-child(even) { grid-template-columns: minmax(0, 1fr); }
+  .voice-page .role-cards .role-card--paired .role-media-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
