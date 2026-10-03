@@ -463,3 +463,53 @@
 .voice-page .role-card--note { justify-content: center; min-height: 150px; }
 .voice-page .role-card--note > div { width: 100%; }
 .voice-page .role-card--note p { margin: 5px 0; }
+
+/* Paired character and performer photos share consistent landscape frames. */
+.voice-page .role-cards .role-card--paired .role-media-pair .role-image-link { aspect-ratio: 16 / 9; }
+.voice-page .role-cards .role-card--paired .role-media-pair .role-image-link img {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: cover;
+}
+/* Official Oishii Wakayama foods introduced by ambassador Yuki Nakashima. */
+.voice-page .wakayama-foods > div:first-child { max-width: 880px; }
+.voice-page .wakayama-food-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+  gap: clamp(12px, 2vw, 20px);
+  margin-top: clamp(26px, 4vw, 42px);
+}
+.voice-page .wakayama-food-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--voice-line);
+  background: linear-gradient(145deg, #1b2632, #151e28);
+}
+.voice-page .wakayama-food-image {
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: #101720;
+}
+.voice-page .wakayama-food-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .4s ease;
+}
+.voice-page .wakayama-food-image:hover img { transform: scale(1.035); }
+.voice-page .wakayama-food-card > div { padding: 14px 16px 16px; }
+.voice-page .wakayama-food-card h3 { margin: 0 0 5px; color: var(--voice-ink); font-size: 1.2rem; font-weight: 500; }
+.voice-page .wakayama-food-card p { margin: 0 0 10px; font-size: .84rem; line-height: 1.6; }
+.voice-page .wakayama-food-source { color: var(--voice-accent); font-size: .76rem; text-underline-offset: 3px; }
+.voice-page .wakayama-food-credit { margin: 22px 0 0; font-size: .76rem; }
+@media (max-width: 600px) {
+  .voice-page .wakayama-food-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .voice-page .wakayama-food-card > div { padding: 11px; }
+  .voice-page .wakayama-food-card h3 { font-size: 1rem; }
+  .voice-page .wakayama-food-card p { font-size: .75rem; }
+}
