@@ -436,6 +436,7 @@
 .voice-page .role-cards .role-card--paired .role-media-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .voice-page .role-cards .role-card--paired img { height: clamp(190px, 24vw, 300px); }
 .voice-page .role-cards .role-card--paired h3 { font-size: clamp(1.35rem, 2.1vw, 1.8rem); }
+.voice-page .role-cards .role-card--compact > .role-image-link { width: 100%; }
 .voice-page .role-cards .role-card--compact .role-image-link img { height: 130px; object-fit: contain; }
 .voice-page .role-cards .role-card--compact h3 { margin: 0 0 5px; font-size: 1.18rem; line-height: 1.3; }
 .voice-page .role-cards .role-card--compact h3 small { margin-top: 3px; font-size: .68em; }
@@ -457,6 +458,7 @@
   .voice-page .role-cards .role-card--paired { grid-column: 1 / -1; padding: 18px; }
   .voice-page .role-cards .role-card--paired img { height: clamp(190px, 54vw, 290px); }
   .voice-page .role-cards .role-card--compact { padding: 11px; }
+  .voice-page .role-cards .role-card--compact:nth-child(even) { padding: 11px; }
   .voice-page .role-cards .role-card--compact .role-image-link img { height: 112px; }
 }
 
@@ -464,13 +466,13 @@
 .voice-page .role-card--note > div { width: 100%; }
 .voice-page .role-card--note p { margin: 5px 0; }
 
-/* Paired character and performer photos share consistent landscape frames. */
-.voice-page .role-cards .role-card--paired .role-media-pair .role-image-link { aspect-ratio: 16 / 9; }
+/* Paired character and performer photos share consistent portrait frames. */
+.voice-page .role-cards .role-card--paired .role-media-pair .role-image-link { aspect-ratio: 4 / 5; }
 .voice-page .role-cards .role-card--paired .role-media-pair .role-image-link img {
   width: 100%;
   height: 100%;
   min-height: 0;
-  object-fit: cover;
+  object-fit: contain;
 }
 /* Official Oishii Wakayama foods introduced by ambassador Yuki Nakashima. */
 .voice-page .wakayama-foods > div:first-child { max-width: 880px; }
